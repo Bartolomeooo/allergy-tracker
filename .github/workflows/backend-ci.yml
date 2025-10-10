@@ -1,9 +1,15 @@
-name: CI
+name: Backend CI
 
 on:
   pull_request:
-    branches:
+    paths:
       - '**'
+      - '!allergy-tracker-ui/**'
+      - '.github/workflows/backend-ci.yml'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
