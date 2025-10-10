@@ -1,0 +1,12 @@
+# build output
+dist/
+build/
+
+# dependencies
+node_modules/
+
+.idea/
+.vscode/
+*.log
+coverage/
+*.snap
