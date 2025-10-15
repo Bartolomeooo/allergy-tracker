@@ -1,0 +1,35 @@
+[
+  {
+    "id": 1,
+    "occurredOn": "2025-10-06",
+    "upperRespiratory": 2,
+    "lowerRespiratory": 5,
+    "skin": 1,
+    "eyes": 0,
+    "total": 3,
+    "exposures": ["Kot"],
+    "note": "Wizyta u znajomych mających kota"
+  },
+  {
+    "id": 2,
+    "occurredOn": "2025-10-07",
+    "upperRespiratory": 4,
+    "lowerRespiratory": 1,
+    "skin": 0,
+    "breath": 1,
+    "total": 2,
+    "exposures": ["Kurz"],
+    "note": "Sprzątanie mieszkania"
+  },
+  {
+    "id": 3,
+    "occurredOn": "2025-10-08",
+    "upperRespiratory": 3,
+    "lowerRespiratory": 0,
+    "skin": 2,
+    "breath": 1,
+    "total": 6,
+    "exposures": ["Brzoza", "Pies"],
+    "note": "Objawy po spacerze w lesie"
+  }
+]
