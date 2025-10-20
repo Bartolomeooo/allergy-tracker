@@ -1,10 +1,11 @@
 import {Container, Stack, Typography} from '@mui/material';
-import * as React from 'react';
+import {useState} from 'react';
 import dayjs, {Dayjs} from 'dayjs';
-import EntryDatePicker from '../components/EntryDatePicker';
+import EntryDatePicker from '../../components/EntryDatePicker';
+import SymptomsSection from './SymptomsSection';
 
 export default function AddEntriesPage() {
-  const [date, setDate] = React.useState<Dayjs | null>(dayjs());
+  const [date, setDate] = useState<Dayjs | null>(dayjs());
 
   return (
     <Container maxWidth="md" sx={{py: 4}}>
@@ -14,6 +15,8 @@ export default function AddEntriesPage() {
         </Typography>
 
         <EntryDatePicker value={date} onChange={setDate} sx={{mt: 1}} />
+
+        <SymptomsSection />
       </Stack>
     </Container>
   );

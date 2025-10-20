@@ -4,7 +4,9 @@ import {PATHS} from './paths';
 import Layout from '../layouts/Layout';
 
 const JournalPage = lazy(() => import('../pages/JournalPage'));
-const AddEntriesPage = lazy(() => import('../pages/AddEntriesPage'));
+const AddEntriesPage = lazy(
+  () => import('../pages/AddEntriesPage/AddEntriesPage.tsx'),
+);
 
 export const routes: RouteObject[] = [
   {
