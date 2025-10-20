@@ -4,11 +4,15 @@ import {PATHS} from './paths';
 import Layout from '../layouts/Layout';
 
 const JournalPage = lazy(() => import('../pages/JournalPage'));
+const AddEntriesPage = lazy(() => import('../pages/AddEntriesPage'));
 
 export const routes: RouteObject[] = [
   {
     path: PATHS.journal,
     element: <Layout />,
-    children: [{index: true, element: <JournalPage />}],
+    children: [
+      {index: true, element: <JournalPage />},
+      {path: PATHS.addEntry, element: <AddEntriesPage />},
+    ],
   },
 ];
