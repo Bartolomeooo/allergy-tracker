@@ -1,5 +1,5 @@
 const USE_MOCKS = Boolean(import.meta.env.VITE_USE_MOCKS);
-const API_URL = USE_MOCKS ? '' : (import.meta.env.VITE_API_URL ?? '');
+const API_URL = USE_MOCKS ? '' : String(import.meta.env.VITE_API_URL ?? '');
 
 export async function apiGet<T>(path: string): Promise<T> {
   const res = await fetch(`${API_URL}${path}`);

@@ -35,7 +35,7 @@ export default function SymptomSlider({
 
       <Slider
         value={value}
-        onChange={(_, v) => onChange(v as number)}
+        onChange={(_, v) => onChange(v)}
         min={min}
         max={max}
         step={step}

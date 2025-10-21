@@ -41,7 +41,7 @@ export default function AddEntriesPage() {
   const canSubmit = !!date && !empty;
 
   const handleCancel = () => {
-    navigate(PATHS.journal);
+    void navigate(PATHS.journal);
   };
 
   const handleSubmit = async () => {
@@ -63,7 +63,7 @@ export default function AddEntriesPage() {
     try {
       await save(body);
       toast.show('Wpis zapisany', 'success');
-      setTimeout(() => navigate(PATHS.journal), 800);
+      setTimeout(() => void navigate(PATHS.journal), 800);
     } catch {
       toast.show('Nie udało się zapisać wpisu', 'error');
     }
@@ -100,7 +100,9 @@ export default function AddEntriesPage() {
 
         <ActionBar
           onCancel={handleCancel}
-          onSubmit={handleSubmit}
+          onSubmit={() => {
+            void handleSubmit();
+          }}
           submitting={submitting}
         />
       </Stack>

@@ -1,21 +1,10 @@
 import {http, HttpResponse} from 'msw';
 import entriesRaw from '../data/entries.json';
-import exposureTypes from '../data/exposure-types.json';
-import type {Entry, NewEntry} from './types';
+import exposureTypesRaw from '../data/exposure-types.json';
+import type {Entry, NewEntry, ExposureType} from './types';
 
-const toEntry = (e: any): Entry => ({
-  id: e.id,
-  occurredOn: e.occurredOn,
-  upperRespiratory: e.upperRespiratory,
-  lowerRespiratory: e.lowerRespiratory,
-  skin: e.skin,
-  eyes: e.eyes,
-  total: e.total,
-  exposures: e.exposures,
-  note: e.note ?? undefined,
-});
-
-let entriesStore: Entry[] = (entriesRaw as any[]).map(toEntry);
+const entriesStore: Entry[] = entriesRaw as Entry[];
+const exposureTypes: ExposureType[] = exposureTypesRaw as ExposureType[];
 
 export const handlers = [
   // GET /api/exposure-types

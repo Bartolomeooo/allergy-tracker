@@ -1,7 +1,7 @@
 import {DateTimePicker, LocalizationProvider} from '@mui/x-date-pickers';
 import {AdapterDayjs} from '@mui/x-date-pickers/AdapterDayjs';
 import {plPL} from '@mui/x-date-pickers/locales';
-import type {SxProps} from '@mui/material';
+import type {SxProps, TextFieldProps} from '@mui/material';
 import type {Dayjs} from 'dayjs';
 import 'dayjs/locale/pl';
 
@@ -44,7 +44,7 @@ export default function EntryDatePicker({
               ...sx,
             },
             inputProps: {'aria-label': 'Data i godzina wpisu'},
-          } as any,
+          } satisfies Partial<TextFieldProps>,
         }}
       />
     </LocalizationProvider>

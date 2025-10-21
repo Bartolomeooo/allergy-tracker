@@ -14,11 +14,17 @@ async function enableMocksIfNeeded() {
   }
 }
 
-enableMocksIfNeeded().then(() => {
+function renderRoot() {
   const root = createRoot(document.getElementById('root')!);
   root.render(
     <StrictMode>
       <App />
     </StrictMode>,
   );
-});
+}
+
+void enableMocksIfNeeded()
+  .catch((err) => {
+    console.error('MSW failed to start:', err);
+  })
+  .finally(renderRoot);
