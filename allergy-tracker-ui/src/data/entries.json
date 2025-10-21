@@ -1,7 +1,7 @@
 [
   {
     "id": 1,
-    "occurredOn": "2025-10-06",
+    "occurredOn": "2025-10-21T16:41:53.514Z",
     "upperRespiratory": 2,
     "lowerRespiratory": 5,
     "skin": 1,
@@ -12,22 +12,22 @@
   },
   {
     "id": 2,
-    "occurredOn": "2025-10-07",
+    "occurredOn": "2025-10-14T13:21:53.514Z",
     "upperRespiratory": 4,
     "lowerRespiratory": 1,
     "skin": 0,
-    "breath": 1,
+    "eyes": 2,
     "total": 2,
     "exposures": ["Kurz"],
     "note": "Sprzątanie mieszkania"
   },
   {
     "id": 3,
-    "occurredOn": "2025-10-08",
+    "occurredOn": "2025-11-26T22:48:53.514Z",
     "upperRespiratory": 3,
     "lowerRespiratory": 0,
     "skin": 2,
-    "breath": 1,
+    "eyes": 4,
     "total": 6,
     "exposures": ["Brzoza", "Pies"],
     "note": "Objawy po spacerze w lesie"
