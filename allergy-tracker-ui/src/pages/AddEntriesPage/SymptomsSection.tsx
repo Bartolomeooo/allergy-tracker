@@ -1,13 +1,27 @@
 import {Stack} from '@mui/material';
-import SymptomSlider from './SymptomSlider.tsx';
-import {useState} from 'react';
+import SymptomSlider from './SymptomSlider';
 
-export default function SymptomsSection() {
-  const [upperResp, setUpperResp] = useState(0);
-  const [lowerResp, setLowerResp] = useState(0);
-  const [skin, setSkin] = useState(0);
-  const [eyes, setEyes] = useState(0);
+type Props = {
+  upperResp: number;
+  onUpperRespChange: (v: number) => void;
+  lowerResp: number;
+  onLowerRespChange: (v: number) => void;
+  skin: number;
+  onSkinChange: (v: number) => void;
+  eyes: number;
+  onEyesChange: (v: number) => void;
+};
 
+export default function SymptomsSection({
+  upperResp,
+  onUpperRespChange,
+  lowerResp,
+  onLowerRespChange,
+  skin,
+  onSkinChange,
+  eyes,
+  onEyesChange,
+}: Props) {
   return (
     <Stack
       direction="row"
@@ -20,7 +34,7 @@ export default function SymptomsSection() {
           label="Górny układ oddechowy"
           helperText="Nasilenie kataru i kichania"
           value={upperResp}
-          onChange={setUpperResp}
+          onChange={onUpperRespChange}
         />
       </Stack>
 
@@ -29,7 +43,7 @@ export default function SymptomsSection() {
           label="Dolny układ oddechowy"
           helperText="Kaszel, świszczący oddech, duszność"
           value={lowerResp}
-          onChange={setLowerResp}
+          onChange={onLowerRespChange}
         />
       </Stack>
 
@@ -38,7 +52,7 @@ export default function SymptomsSection() {
           label="Zmiany skórne"
           helperText="Wysypka, świąd, zaczerwienienie skóry"
           value={skin}
-          onChange={setSkin}
+          onChange={onSkinChange}
         />
       </Stack>
 
@@ -47,7 +61,7 @@ export default function SymptomsSection() {
           label="Podrażnienie oczu"
           helperText="Łzawienie, swędzenie, zaczerwienienie oczu"
           value={eyes}
-          onChange={setEyes}
+          onChange={onEyesChange}
         />
       </Stack>
     </Stack>
