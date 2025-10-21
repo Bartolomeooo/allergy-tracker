@@ -3,8 +3,22 @@ import {createRoot} from 'react-dom/client';
 import './index.css';
 import App from './App.tsx';
 
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
-);
+async function enableMocksIfNeeded() {
+  if (import.meta.env.DEV && import.meta.env.VITE_USE_MOCKS) {
+    const {worker} = await import('./mocks/browser');
+    await worker.start({
+      serviceWorker: {url: '/mockServiceWorker.js'},
+      onUnhandledRequest: 'bypass',
+    });
+    console.info('Mock Service Worker uruchomiony');
+  }
+}
+
+enableMocksIfNeeded().then(() => {
+  const root = createRoot(document.getElementById('root')!);
+  root.render(
+    <StrictMode>
+      <App />
+    </StrictMode>,
+  );
+});

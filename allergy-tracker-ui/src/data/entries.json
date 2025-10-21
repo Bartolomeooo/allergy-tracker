@@ -16,7 +16,7 @@
     "upperRespiratory": 4,
     "lowerRespiratory": 1,
     "skin": 0,
-    "breath": 1,
+    "eyes": 2,
     "total": 2,
     "exposures": ["Kurz"],
     "note": "Sprzątanie mieszkania"
@@ -27,7 +27,7 @@
     "upperRespiratory": 3,
     "lowerRespiratory": 0,
     "skin": 2,
-    "breath": 1,
+    "eyes": 4,
     "total": 6,
     "exposures": ["Brzoza", "Pies"],
     "note": "Objawy po spacerze w lesie"
