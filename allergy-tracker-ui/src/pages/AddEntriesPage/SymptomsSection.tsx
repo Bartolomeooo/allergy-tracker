@@ -1,5 +1,5 @@
 import {Stack} from '@mui/material';
-import SymptomSlider from '../../components/SymptomSlider';
+import SymptomSlider from './SymptomSlider.tsx';
 import {useState} from 'react';
 
 export default function SymptomsSection() {
