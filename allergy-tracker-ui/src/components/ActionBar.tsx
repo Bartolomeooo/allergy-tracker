@@ -19,7 +19,7 @@ export default function ActionBar({onCancel, onSubmit, submitting}: Props) {
         Anuluj
       </ActionButton>
 
-      <ActionButton tone="primary" onClick={onSubmit}>
+      <ActionButton tone="primary" onClick={onSubmit} disabled={submitting}>
         {submitting ? 'Zapisywanie…' : 'Zapisz'}
       </ActionButton>
     </Stack>

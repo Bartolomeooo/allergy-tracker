@@ -2,17 +2,24 @@ import {Container, Stack, Typography, Snackbar, Alert} from '@mui/material';
 import {useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import dayjs, {Dayjs} from 'dayjs';
+
 import EntryDatePicker from './EntryDatePicker';
 import SymptomsSection from './SymptomsSection';
 import ExposureSelector from './ExposureSelector';
 import NoteTextField from './NoteTextField';
 import ActionBar from '../../components/ActionBar';
-import {apiPost} from '../../api/client';
-import type {Entry, NewEntry} from '../../mocks/types';
+
 import {PATHS} from '../../router/paths';
+
+import {useToast} from '../../hooks/useToast';
+import {useSaveEntry} from '../../hooks/useSaveEntry';
+import {buildNewEntry, isEntryFormEmpty} from '../../utils/entries';
 
 export default function AddEntriesPage() {
   const navigate = useNavigate();
+
+  const toast = useToast();
+  const {save, submitting} = useSaveEntry();
 
   const [date, setDate] = useState<Dayjs | null>(dayjs());
   const [exposures, setExposures] = useState<string[]>([]);
@@ -23,55 +30,42 @@ export default function AddEntriesPage() {
   const [skin, setSkin] = useState(0);
   const [eyes, setEyes] = useState(0);
 
-  const [submitting, setSubmitting] = useState(false);
-  const [toastOpen, setToastOpen] = useState(false);
-  const [toastMsg, setToastMsg] = useState('');
-  const [toastSev, setToastSev] = useState<'success' | 'error'>('success');
+  const empty = isEntryFormEmpty({
+    upperResp,
+    lowerResp,
+    skin,
+    eyes,
+    exposures,
+    note,
+  });
+  const canSubmit = !!date && !empty;
 
   const handleCancel = () => {
     navigate(PATHS.journal);
   };
 
-  const isFormEmpty =
-    upperResp === 0 &&
-    lowerResp === 0 &&
-    skin === 0 &&
-    eyes === 0 &&
-    exposures.length === 0 &&
-    !note.trim();
-
   const handleSubmit = async () => {
-    if (!date || isFormEmpty) {
-      setToastSev('error');
-      setToastMsg('Uzupełnij dane przed zapisaniem.');
-      setToastOpen(true);
+    if (!canSubmit || !date) {
+      toast.show('Uzupełnij dane przed zapisaniem.', 'error');
       return;
     }
 
-    const body: NewEntry = {
-      occurredOn: date.format('YYYY-MM-DD'),
-      upperRespiratory: upperResp,
-      lowerRespiratory: lowerResp,
+    const body = buildNewEntry({
+      date,
+      upperResp,
+      lowerResp,
       skin,
       eyes,
-      total: upperResp + lowerResp + skin + eyes,
       exposures,
-      note: note || undefined,
-    };
+      note,
+    });
 
     try {
-      setSubmitting(true);
-      await apiPost<Entry>('/api/entries', body);
-      setToastSev('success');
-      setToastMsg('Wpis zapisany');
-      setToastOpen(true);
+      await save(body);
+      toast.show('Wpis zapisany', 'success');
       setTimeout(() => navigate(PATHS.journal), 800);
-    } catch (e) {
-      setToastSev('error');
-      setToastMsg('Nie udało się zapisać wpisu');
-      setToastOpen(true);
-    } finally {
-      setSubmitting(false);
+    } catch {
+      toast.show('Nie udało się zapisać wpisu', 'error');
     }
   };
 
@@ -97,7 +91,6 @@ export default function AddEntriesPage() {
 
         <Stack spacing={4} sx={{alignItems: 'center', width: '70%'}}>
           <ExposureSelector value={exposures} onChange={setExposures} />
-
           <NoteTextField
             value={note}
             onChange={setNote}
@@ -112,13 +105,9 @@ export default function AddEntriesPage() {
         />
       </Stack>
 
-      <Snackbar
-        open={toastOpen}
-        autoHideDuration={2500}
-        onClose={() => setToastOpen(false)}
-      >
-        <Alert severity={toastSev} variant="filled">
-          {toastMsg}
+      <Snackbar open={toast.open} autoHideDuration={2500} onClose={toast.hide}>
+        <Alert severity={toast.sev} variant="filled">
+          {toast.msg}
         </Alert>
       </Snackbar>
     </Container>
