@@ -12,7 +12,7 @@ export function buildNewEntry(params: {
 }): NewEntry {
   const total = params.upperResp + params.lowerResp + params.skin + params.eyes;
   return {
-    occurredOn: params.date.format('YYYY-MM-DD'),
+    occurredOn: params.date.toDate().toISOString(),
     upperRespiratory: params.upperResp,
     lowerRespiratory: params.lowerResp,
     skin: params.skin,

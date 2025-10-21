@@ -1,4 +1,4 @@
-import {DatePicker, LocalizationProvider} from '@mui/x-date-pickers';
+import {DateTimePicker, LocalizationProvider} from '@mui/x-date-pickers';
 import {AdapterDayjs} from '@mui/x-date-pickers/AdapterDayjs';
 import {plPL} from '@mui/x-date-pickers/locales';
 import type {SxProps} from '@mui/material';
@@ -26,9 +26,9 @@ export default function EntryDatePicker({
         plPL.components.MuiLocalizationProvider.defaultProps.localeText
       }
     >
-      <DatePicker
+      <DateTimePicker
         label={null}
-        format="YYYY-MM-DD"
+        format="YYYY-MM-DD HH:mm"
         value={value}
         onChange={onChange}
         disableFuture={disableFuture}
@@ -43,7 +43,7 @@ export default function EntryDatePicker({
               },
               ...sx,
             },
-            inputProps: {'aria-label': 'Data wpisu'},
+            inputProps: {'aria-label': 'Data i godzina wpisu'},
           } as any,
         }}
       />
