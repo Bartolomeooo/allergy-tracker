@@ -2,7 +2,6 @@ export interface ExposureType {
   id: number;
   name: string;
   description?: string;
-  imageUrl?: string;
 }
 
 export interface Entry {

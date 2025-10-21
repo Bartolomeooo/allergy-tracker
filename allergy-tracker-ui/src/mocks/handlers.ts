@@ -31,13 +31,11 @@ export const handlers = [
     }
 
     const description = body?.description?.toString().trim() || undefined;
-    const imageUrl = body?.imageUrl?.toString().trim() || undefined;
 
     const newExposure: ExposureType = {
       id: Date.now(),
       name,
       ...(description ? {description} : {}),
-      ...(imageUrl ? {imageUrl} : {}),
     };
 
     exposureTypes.unshift(newExposure);

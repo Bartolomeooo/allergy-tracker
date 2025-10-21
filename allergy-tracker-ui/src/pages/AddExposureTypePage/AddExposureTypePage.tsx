@@ -12,7 +12,7 @@ import ActionBar from '../../components/ActionBar';
 import NoteTextField from '../../components/NoteTextField';
 import {useToast} from '../../hooks/useToast';
 import {useSaveExposureType} from '../../hooks/useSaveExposureType';
-import {PATHS} from '../../router/paths.ts';
+import {PATHS} from '../../router/paths';
 
 export default function AddExposureTypePage() {
   const navigate = useNavigate();
