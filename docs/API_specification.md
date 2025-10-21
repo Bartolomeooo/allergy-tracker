@@ -13,6 +13,7 @@ It defines all endpoints currently implemented in the frontend mock layer (MSW) 
 | GET    | `/api/exposure-types` | Returns available exposure (allergen) types |
 | GET    | `/api/entries`        | Returns all user journal entries |
 | POST   | `/api/entries`        | Creates a new journal entry |
+| POST   | `/api/exposure-types`  | Creates a new exposure (allergen) type |
 
 ---
 
@@ -24,12 +25,38 @@ Returns a list of allergen/exposure types that the user can select when adding a
 ### Example Response — `200 OK`
 ```json
 [
-  {"id": 1, "name": "Birch"},
-  {"id": 2, "name": "Cat"},
-  {"id": 3, "name": "Dust"},
-  {"id": 4, "name": "Dog"},
-  {"id": 5, "name": "Strawberry"}
+  {
+    "id": 1,
+    "name": "Truskawka",
+    "description": "Owoc sezonowy, często powoduje reakcje alergiczne u dzieci.",
+    "imageUrl": "https://images.unsplash.com/photo-1497048679117-1a29644559c9?w=800"
+  },
+  {
+    "id": 2,
+    "name": "Brzoza",
+    "description": "Pyłek brzozy jest jedną z najczęstszych przyczyn alergii wiosennych.",
+    "imageUrl": "https://images.unsplash.com/photo-1582034986517-7c1b5631a88d?w=800"
+  },
+  {
+    "id": 3,
+    "name": "Kurz",
+    "description": "Zawiera roztocza kurzu domowego – typowy alergen całoroczny.",
+    "imageUrl": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800"
+  },
+  {
+    "id": 4,
+    "name": "Kot",
+    "description": "Alergeny pochodzą głównie ze śliny i sierści kota.",
+    "imageUrl": "https://images.unsplash.com/photo-1592194996308-7b43878e84a6?w=800"
+  },
+  {
+    "id": 5,
+    "name": "Pies",
+    "description": "Podobnie jak koty, psy wydzielają alergeny w ślinie i naskórku.",
+    "imageUrl": "https://images.unsplash.com/photo-1560807707-8cc77767d783?w=800"
+  }
 ]
+
 ```
 ---
 
@@ -99,4 +126,23 @@ The endpoint returns the created entry object with a generated `id`.
   "exposures": ["Birch"],
   "note": "Symptoms after a walk in the park"
 }
+```
+---
+## POST `/api/exposure-types`
+
+### Description
+Creates and stores a new exposure (allergen) type.  
+Each exposure type contains a name, an optional description, and an optional image URL (for example, from Unsplash).
+
+The endpoint returns the created exposure type object with a generated `id`.
+
+### Example Request
+```json
+{
+  "name": "Grain",
+  "description": "Pollen from grains can cause seasonal allergy symptoms.",
+  "imageUrl": "https://images.unsplash.com/photo-1501004318641-b39e6451bec6?w=800"
+}
+```
+
 
