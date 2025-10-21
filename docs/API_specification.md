@@ -13,6 +13,7 @@ It defines all endpoints currently implemented in the frontend mock layer (MSW) 
 | GET    | `/api/exposure-types` | Returns available exposure (allergen) types |
 | GET    | `/api/entries`        | Returns all user journal entries |
 | POST   | `/api/entries`        | Creates a new journal entry |
+| POST   | `/api/exposure-types`  | Creates a new exposure (allergen) type |
 
 ---
 
@@ -24,12 +25,33 @@ Returns a list of allergen/exposure types that the user can select when adding a
 ### Example Response — `200 OK`
 ```json
 [
-  {"id": 1, "name": "Birch"},
-  {"id": 2, "name": "Cat"},
-  {"id": 3, "name": "Dust"},
-  {"id": 4, "name": "Dog"},
-  {"id": 5, "name": "Strawberry"}
+  {
+    "id": 1,
+    "name": "Truskawka",
+    "description": "Owoc sezonowy, często powoduje reakcje alergiczne u dzieci."
+  },
+  {
+    "id": 2,
+    "name": "Brzoza",
+    "description": "Pyłek brzozy jest jedną z najczęstszych przyczyn alergii wiosennych."
+  },
+  {
+    "id": 3,
+    "name": "Kurz",
+    "description": "Zawiera roztocza kurzu domowego – typowy alergen całoroczny."
+  },
+  {
+    "id": 4,
+    "name": "Kot",
+    "description": "Alergeny pochodzą głównie ze śliny i sierści kota."
+  },
+  {
+    "id": 5,
+    "name": "Pies",
+    "description": "Podobnie jak koty, psy wydzielają alergeny w ślinie i naskórku."
+  }
 ]
+
 ```
 ---
 
@@ -99,4 +121,22 @@ The endpoint returns the created entry object with a generated `id`.
   "exposures": ["Birch"],
   "note": "Symptoms after a walk in the park"
 }
+```
+---
+## POST `/api/exposure-types`
+
+### Description
+Creates and stores a new exposure (allergen) type.  
+Each exposure type contains a name and an optional description
+
+The endpoint returns the created exposure type object with a generated `id`.
+
+### Example Request
+```json
+{
+  "name": "Grain",
+  "description": "Pollen from grains can cause seasonal allergy symptoms."
+}
+```
+
 

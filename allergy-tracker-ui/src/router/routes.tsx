@@ -5,7 +5,10 @@ import Layout from '../layouts/Layout';
 
 const JournalPage = lazy(() => import('../pages/JournalPage'));
 const AddEntriesPage = lazy(
-  () => import('../pages/AddEntriesPage/AddEntriesPage.tsx'),
+  () => import('../pages/AddEntriesPage/AddEntriesPage'),
+);
+const AddExposureTypePage = lazy(
+  () => import('../pages/AddExposureTypePage/AddExposureTypePage'),
 );
 
 export const routes: RouteObject[] = [
@@ -15,6 +18,7 @@ export const routes: RouteObject[] = [
     children: [
       {index: true, element: <JournalPage />},
       {path: PATHS.addEntry, element: <AddEntriesPage />},
+      {path: PATHS.addExposure, element: <AddExposureTypePage />},
     ],
   },
 ];

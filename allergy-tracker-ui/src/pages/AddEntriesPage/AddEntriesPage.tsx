@@ -6,7 +6,7 @@ import dayjs, {Dayjs} from 'dayjs';
 import EntryDatePicker from './EntryDatePicker';
 import SymptomsSection from './SymptomsSection';
 import ExposureSelector from './ExposureSelector';
-import NoteTextField from './NoteTextField';
+import NoteTextField from '../../components/NoteTextField';
 import ActionBar from '../../components/ActionBar';
 
 import {PATHS} from '../../router/paths';

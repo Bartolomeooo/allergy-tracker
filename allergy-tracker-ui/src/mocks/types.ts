@@ -1,6 +1,7 @@
 export interface ExposureType {
   id: number;
   name: string;
+  description?: string;
 }
 
 export interface Entry {
@@ -16,7 +17,3 @@ export interface Entry {
 }
 
 export type NewEntry = Omit<Entry, 'id'>;
-
-export interface ApiResponse<T> {
-  data: T;
-}

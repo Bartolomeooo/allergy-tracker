@@ -1,6 +1,6 @@
 import {http, HttpResponse} from 'msw';
-import entriesRaw from '../data/entries.json';
-import exposureTypesRaw from '../data/exposure-types.json';
+import entriesRaw from './data/entries.json';
+import exposureTypesRaw from './data/exposure-types.json';
 import type {Entry, NewEntry, ExposureType} from './types';
 
 const entriesStore: Entry[] = entriesRaw as Entry[];
@@ -19,5 +19,27 @@ export const handlers = [
     const newEntry: Entry = {id: Date.now(), ...body};
     entriesStore.unshift(newEntry);
     return HttpResponse.json(newEntry, {status: 201});
+  }),
+
+  // POST /api/exposure-types
+  http.post('/api/exposure-types', async ({request}) => {
+    const body = (await request.json()) as Partial<ExposureType> | undefined;
+
+    const name = body?.name?.toString().trim();
+    if (!name) {
+      return new HttpResponse('Missing "name"', {status: 400});
+    }
+
+    const description = body?.description?.toString().trim() || undefined;
+
+    const newExposure: ExposureType = {
+      id: Date.now(),
+      name,
+      ...(description ? {description} : {}),
+    };
+
+    exposureTypes.unshift(newExposure);
+
+    return HttpResponse.json(newExposure, {status: 201});
   }),
 ];
