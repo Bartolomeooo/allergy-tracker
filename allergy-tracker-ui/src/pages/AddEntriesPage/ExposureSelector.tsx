@@ -46,7 +46,7 @@ export default function ExposureSelector({value, onChange, disabled}: Props) {
   return (
     <Paper
       variant="outlined"
-      sx={{p: 3, borderRadius: 2, width: '80%', mx: 'auto'}}
+      sx={{p: 3, borderRadius: 2, width: '100%', mx: 'auto'}}
     >
       <Stack spacing={2}>
         <Typography variant="subtitle1" color="text.primary">
