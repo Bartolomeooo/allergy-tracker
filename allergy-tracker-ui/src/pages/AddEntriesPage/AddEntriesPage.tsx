@@ -3,7 +3,7 @@ import {useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import dayjs, {Dayjs} from 'dayjs';
 
-import EntryDatePicker from './EntryDatePicker';
+import EntryDatePicker from '../../components/EntryDatePicker.tsx';
 import SymptomsSection from './SymptomsSection';
 import ExposureSelector from './ExposureSelector';
 import NoteTextField from '../../components/NoteTextField';
