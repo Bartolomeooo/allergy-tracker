@@ -59,4 +59,30 @@ export const handlers = [
     entriesStore.splice(idx, 1);
     return new HttpResponse(null, {status: 204});
   }),
+
+  // GET /api/entries/:id
+  http.get('/api/entries/:id', ({params}) => {
+    const id = Number(params.id);
+    const entry = entriesStore.find((x) => x.id === id);
+    if (!entry) return new HttpResponse('Not Found', {status: 404});
+    return HttpResponse.json(entry);
+  }),
+
+  // PUT /api/entries/:id
+  http.put('/api/entries/:id', async ({params, request}) => {
+    const id = Number(params.id);
+    const idx = entriesStore.findIndex((x) => x.id === id);
+    if (idx === -1) return new HttpResponse('Not Found', {status: 404});
+
+    const body = (await request.json()) as NewEntry;
+
+    if (!body.occurredOn) {
+      return new HttpResponse('Missing "occurredOn"', {status: 400});
+    }
+
+    const updated: Entry = {id, ...body};
+    entriesStore[idx] = updated;
+
+    return HttpResponse.json(updated, {status: 200});
+  }),
 ];

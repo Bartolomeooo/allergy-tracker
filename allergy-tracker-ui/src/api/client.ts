@@ -21,3 +21,13 @@ export async function apiDelete(path: string): Promise<void> {
   const res = await fetch(`${API_URL}${path}`, {method: 'DELETE'});
   if (!res.ok) throw new Error(`DELETE ${path} ${res.status}`);
 }
+
+export async function apiPut<T>(path: string, body: unknown): Promise<T> {
+  const res = await fetch(`${API_URL}${path}`, {
+    method: 'PUT',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(body),
+  });
+  if (!res.ok) throw new Error(`PUT ${path} ${res.status}`);
+  return res.json() as Promise<T>;
+}
