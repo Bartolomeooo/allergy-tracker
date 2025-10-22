@@ -2,15 +2,15 @@ import {Box} from '@mui/material';
 
 export default function SeverityPill({value}: {value: number}) {
   const bg =
-    value === 6
+    value >= 19
       ? 'error.main'
-      : value === 5
+      : value >= 17
         ? 'error.light'
-        : value === 4
+        : value >= 13
           ? 'warning.main'
-          : value === 3
+          : value >= 9
             ? 'warning.light'
-            : value === 2
+            : value >= 5
               ? 'success.light'
               : 'success.main';
 
