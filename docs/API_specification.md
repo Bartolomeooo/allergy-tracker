@@ -8,14 +8,16 @@ It defines all endpoints currently implemented in the frontend mock layer (MSW) 
 
 ## Endpoints Overview
 
-| Method | Path                    | Description                     |
-|:-------|:------------------------|:--------------------------------|
-| GET    | `/api/exposure-types`   | Returns available exposure (allergen) types |
-| GET    | `/api/entries`          | Returns all user journal entries |
-| GET    | `/api/exposure-types/2' | Returns details of a specific exposure (allergen) type  |
-| POST   | `/api/entries`          | Creates a new journal entry |
-| POST   | `/api/exposure-types`   | Creates a new exposure (allergen) type |
-| DELETE | `/api/entries/:id`      | Deletes a specific journal entry |
+| Method | Path                      | Description                     |
+|:-------|:--------------------------|:--------------------------------|
+| GET    | `/api/exposure-types`     | Returns available exposure (allergen) types |
+| GET    | `/api/entries`            | Returns all user journal entries |
+| GET    | `/api/exposure-types/:id`  | Returns details of a specific exposure (allergen) type  |
+| GET    | `/api/entries/:id`        | Returns details of a specific journal entry  |
+| POST   | `/api/entries`            | Creates a new journal entry |
+| POST   | `/api/exposure-types`     | Creates a new exposure (allergen) type |
+| PUT    | `/api/entries/:id`        | Updates an existing journal entry |
+| DELETE | `/api/entries/:id`        | Deletes a specific journal entry |
 
 ---
 
@@ -119,6 +121,28 @@ Used when the user clicks on an exposure in the interface to view its descriptio
 ```
 ---
 
+## GET `/api/entries/:id`
+
+### Description
+Returns detailed information about a specific allergy journal entry identified by its unique id.
+Used when the user opens an entry for editing.
+
+### Example Response — `200 OK`
+```json
+{
+  "id": 3,
+  "occurredOn": "2025-11-26T22:48:53.514Z",
+  "upperRespiratory": 3,
+  "lowerRespiratory": 0,
+  "skin": 2,
+  "eyes": 4,
+  "total": 6,
+  "exposures": ["Birch", "Dog"],
+  "note": "Symptoms after a walk in the forest"
+}
+```
+---
+
 ## POST `/api/entries`
 
 ### Description
@@ -155,6 +179,29 @@ The endpoint returns the created exposure type object with a generated `id`.
 {
   "name": "Grain",
   "description": "Pollen from grains can cause seasonal allergy symptoms."
+}
+```
+
+---
+## PUT `/api/entries:id`
+
+### Description
+Updates an existing allergy journal entry identified by its unique id.
+All fields must be provided — the record is fully replaced with the provided data.
+
+The endpoint returns the updated entry object.
+
+### Example Request
+```json
+{
+  "occurredOn": "2025-11-26T22:48:53.514Z",
+  "upperRespiratory": 4,
+  "lowerRespiratory": 1,
+  "skin": 3,
+  "eyes": 2,
+  "total": 10,
+  "exposures": ["Birch", "Dust"],
+  "note": "Adjusted after checking symptoms again."
 }
 ```
 

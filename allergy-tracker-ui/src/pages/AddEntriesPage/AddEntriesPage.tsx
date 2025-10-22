@@ -1,6 +1,7 @@
 import {Container, Stack, Typography, Snackbar, Alert} from '@mui/material';
-import {useState} from 'react';
-import {useNavigate} from 'react-router-dom';
+import {useState, useEffect} from 'react';
+import {useNavigate, useLocation} from 'react-router-dom';
+import {useQuery} from '@tanstack/react-query';
 import dayjs, {Dayjs} from 'dayjs';
 
 import EntryDatePicker from '../../components/EntryDatePicker.tsx';
@@ -13,13 +14,22 @@ import {PATHS} from '../../router/paths';
 
 import {useToast} from '../../hooks/useToast';
 import {useSaveEntry} from '../../hooks/useSaveEntry';
+import {useUpdateEntry} from '../../hooks/useUpdateEntry';
+import {apiGet} from '../../api/client';
 import {buildNewEntry, isEntryFormEmpty} from '../../utils/entries';
+import type {Entry} from '../../mocks/types';
+
+type LocationState = {entryId?: number} | null;
 
 export default function AddEntriesPage() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const entryId = (location.state as LocationState)?.entryId;
+  const isEdit = Boolean(entryId);
 
   const toast = useToast();
-  const {save, submitting} = useSaveEntry();
+  const {save, submitting: creating} = useSaveEntry();
+  const {update, submitting: updating} = useUpdateEntry();
 
   const [date, setDate] = useState<Dayjs | null>(dayjs());
   const [exposures, setExposures] = useState<string[]>([]);
@@ -30,6 +40,35 @@ export default function AddEntriesPage() {
   const [skin, setSkin] = useState(0);
   const [eyes, setEyes] = useState(0);
 
+  const {
+    data: existing,
+    isLoading: loadingExisting,
+    isError: loadError,
+  } = useQuery({
+    queryKey: ['entry', entryId ?? 'new'],
+    queryFn: () => apiGet<Entry>(`/api/entries/${entryId}`),
+    enabled: !!entryId,
+  });
+
+  useEffect(() => {
+    if (!existing) return;
+    setDate(dayjs(existing.occurredOn));
+    setExposures(existing.exposures ?? []);
+    setNote(existing.note ?? '');
+    setUpperResp(existing.upperRespiratory ?? 0);
+    setLowerResp(existing.lowerRespiratory ?? 0);
+    setSkin(existing.skin ?? 0);
+    setEyes(existing.eyes ?? 0);
+  }, [existing]);
+
+  useEffect(() => {
+    if (isEdit && loadError) {
+      toast.show('Nie znaleziono wpisu do edycji.', 'error');
+      const t = setTimeout(() => void navigate(PATHS.journal), 1200);
+      return () => clearTimeout(t);
+    }
+  }, [isEdit, loadError, navigate, toast]);
+
   const empty = isEntryFormEmpty({
     upperResp,
     lowerResp,
@@ -38,7 +77,9 @@ export default function AddEntriesPage() {
     exposures,
     note,
   });
-  const canSubmit = !!date && !empty;
+
+  const canSubmit = !!date && !empty && !loadingExisting;
+  const submitting = creating || updating;
 
   const handleCancel = () => {
     void navigate(PATHS.journal);
@@ -61,11 +102,16 @@ export default function AddEntriesPage() {
     });
 
     try {
-      await save(body);
-      toast.show('Wpis zapisany', 'success');
+      if (isEdit && entryId) {
+        await update({id: entryId, body});
+        toast.show('Zmiany zapisane', 'success');
+      } else {
+        await save(body); // POST
+        toast.show('Wpis zapisany', 'success');
+      }
       setTimeout(() => void navigate(PATHS.journal), 800);
     } catch {
-      toast.show('Nie udało się zapisać wpisu', 'error');
+      toast.show('Nie udało się zapisać', 'error');
     }
   };
 
@@ -73,7 +119,7 @@ export default function AddEntriesPage() {
     <Container maxWidth="md" sx={{py: 4}}>
       <Stack spacing={3} alignItems="center">
         <Typography variant="h4" component="h1" align="center">
-          Dodaj nowy wpis
+          {isEdit ? 'Edytuj wpis' : 'Dodaj nowy wpis'}
         </Typography>
 
         <EntryDatePicker value={date} onChange={setDate} sx={{mt: 1}} />
@@ -103,7 +149,7 @@ export default function AddEntriesPage() {
           onSubmit={() => {
             void handleSubmit();
           }}
-          submitting={submitting}
+          submitting={submitting || loadingExisting}
         />
       </Stack>
 

@@ -4,11 +4,18 @@ import {useDeleteEntry} from '../../hooks/useDeleteEntry';
 import {useToast} from '../../hooks/useToast';
 import {Alert, Snackbar} from '@mui/material';
 import DeleteEntryDialog from './DeleteEntryDialog';
+import {useNavigate} from 'react-router-dom';
+import {PATHS} from '../../router/paths';
 
 export default function JournalPage() {
+  const navigate = useNavigate();
   const {deleteEntry, pending} = useDeleteEntry();
   const {open, msg, sev, show, hide} = useToast();
   const [pendingDeleteId, setPendingDeleteId] = useState<number | null>(null);
+
+  const editEntry = (id: number) => {
+    void navigate(PATHS.addEntry, {state: {entryId: id}});
+  };
 
   const askDelete = useCallback((id: number) => {
     setPendingDeleteId(id);
@@ -33,7 +40,7 @@ export default function JournalPage() {
 
   return (
     <>
-      <EntriesList onEdit={() => {}} onDelete={askDelete} />
+      <EntriesList onEdit={editEntry} onDelete={askDelete} />
 
       <DeleteEntryDialog
         open={pendingDeleteId != null}
