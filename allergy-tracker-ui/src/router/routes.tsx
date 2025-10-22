@@ -3,7 +3,7 @@ import type {RouteObject} from 'react-router-dom';
 import {PATHS} from './paths';
 import Layout from '../layouts/Layout';
 
-const JournalPage = lazy(() => import('../pages/JournalPage'));
+const JournalPage = lazy(() => import('../pages/JournalPage/JournalPage.tsx'));
 const AddEntriesPage = lazy(
   () => import('../pages/AddEntriesPage/AddEntriesPage'),
 );

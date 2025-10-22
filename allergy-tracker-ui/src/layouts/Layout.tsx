@@ -7,7 +7,7 @@ export default function Layout() {
     <>
       <Navbar />
       <Toolbar />
-      <Container maxWidth="lg" sx={{bgcolor: 'background.paper', pt: 4}}>
+      <Container maxWidth="xl" sx={{bgcolor: 'background.paper', pt: 4}}>
         <Outlet />
       </Container>
     </>

@@ -31,5 +31,16 @@
     "total": 6,
     "exposures": ["Brzoza", "Pies"],
     "note": "Objawy po spacerze w lesie"
+  },
+  {
+    "id": 4,
+    "occurredOn": "2025-10-20T12:47:53.514Z",
+    "upperRespiratory": 0,
+    "lowerRespiratory": 3,
+    "skin": 1,
+    "eyes": 0,
+    "total": 4,
+    "exposures": ["Kot", "Pies", "Brzoza", "Kurz", "Truskawka"],
+    "note": "Wizyta u znajomych mających kota – pojawiły się łagodne objawy po kontakcie ze zwierzętami."
   }
 ]
