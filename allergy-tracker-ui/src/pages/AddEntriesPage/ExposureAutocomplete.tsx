@@ -13,6 +13,7 @@ type Props = {
   loading?: boolean;
   disabled?: boolean;
   placeholder?: string;
+  onChipClick?: (name: string) => void;
 };
 
 export default function ExposureAutocomplete({
@@ -22,6 +23,7 @@ export default function ExposureAutocomplete({
   loading = false,
   disabled = false,
   placeholder = 'Wybierz z listy…',
+  onChipClick,
 }: Props) {
   return (
     <Autocomplete
@@ -34,15 +36,24 @@ export default function ExposureAutocomplete({
       disabled={disabled}
       openOnFocus
       renderTags={(selected, getTagProps) =>
-        selected.map((option, index) => (
-          <Chip
-            {...getTagProps({index})}
-            key={option}
-            label={option}
-            size="small"
-            variant="outlined"
-          />
-        ))
+        selected.map((option, index) => {
+          const tagProps = getTagProps({index});
+          return (
+            <Chip
+              {...tagProps}
+              key={option}
+              label={option}
+              size="small"
+              variant="outlined"
+              clickable
+              onMouseDown={(e) => e.preventDefault()}
+              onClick={(e) => {
+                e.stopPropagation();
+                onChipClick?.(option);
+              }}
+            />
+          );
+        })
       }
       renderInput={(params) => (
         <TextField

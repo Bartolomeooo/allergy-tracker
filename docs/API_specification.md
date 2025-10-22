@@ -8,12 +8,13 @@ It defines all endpoints currently implemented in the frontend mock layer (MSW) 
 
 ## Endpoints Overview
 
-| Method | Path                | Description                     |
-|:-------|:--------------------|:--------------------------------|
-| GET    | `/api/exposure-types` | Returns available exposure (allergen) types |
-| GET    | `/api/entries`        | Returns all user journal entries |
-| POST   | `/api/entries`        | Creates a new journal entry |
-| POST   | `/api/exposure-types`  | Creates a new exposure (allergen) type |
+| Method | Path                    | Description                     |
+|:-------|:------------------------|:--------------------------------|
+| GET    | `/api/exposure-types`   | Returns available exposure (allergen) types |
+| GET    | `/api/entries`          | Returns all user journal entries |
+| GET    | `/api/exposure-types/2' | Returns details of a specific exposure (allergen) type  |
+| POST   | `/api/entries`          | Creates a new journal entry |
+| POST   | `/api/exposure-types`   | Creates a new exposure (allergen) type |
 
 ---
 
@@ -98,6 +99,22 @@ Each entry represents one observation, including the date, recorded symptoms, an
     "note": "Symptoms after a walk in the forest"
   }
 ]
+```
+---
+
+## GET `/api/exposure-types/:id`
+
+### Description
+Returns detailed information about a specific exposure (allergen) type identified by its unique id.
+Used when the user clicks on an exposure in the interface to view its description or related details.
+
+### Example Response — `200 OK`
+```json
+  {
+    "id": 4,
+    "name": "Cat",
+    "description": "Allergens mainly come from cat saliva and dander (shed skin particles)."
+  }
 ```
 ---
 
