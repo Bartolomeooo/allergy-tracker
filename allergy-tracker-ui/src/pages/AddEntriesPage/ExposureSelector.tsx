@@ -1,8 +1,9 @@
 import {useEffect, useMemo, useState} from 'react';
 import {Alert, Paper, Stack, Typography} from '@mui/material';
-import {apiGet} from '../../api/client.ts';
-import type {ExposureType} from '../../mocks/types.ts';
-import ExposureAutocomplete from './ExposureAutocomplete.tsx';
+import {apiGet} from '../../api/client';
+import type {ExposureType} from '../../mocks/types';
+import ExposureAutocomplete from './ExposureAutocomplete';
+import ExposureDetailsDialog from '../../components/ExposureDetailsDialog';
 
 type Props = {
   value: string[];
@@ -12,8 +13,10 @@ type Props = {
 
 export default function ExposureSelector({value, onChange, disabled}: Props) {
   const [options, setOptions] = useState<string[]>([]);
+  const [nameToId, setNameToId] = useState<Record<string, number>>({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [previewId, setPreviewId] = useState<number | null>(null);
 
   useEffect(() => {
     let mounted = true;
@@ -24,6 +27,7 @@ export default function ExposureSelector({value, onChange, disabled}: Props) {
       .then((data) => {
         if (!mounted) return;
         setOptions(data.map((e) => e.name));
+        setNameToId(Object.fromEntries(data.map((e) => [e.name, e.id])));
       })
       .catch((e) => {
         if (!mounted) return;
@@ -61,8 +65,17 @@ export default function ExposureSelector({value, onChange, disabled}: Props) {
           options={available}
           loading={loading}
           disabled={disabled}
+          onChipClick={(name) => {
+            const id = nameToId[name];
+            if (id) setPreviewId(id);
+          }}
         />
       </Stack>
+      <ExposureDetailsDialog
+        open={previewId != null}
+        id={previewId}
+        onClose={() => setPreviewId(null)}
+      />
     </Paper>
   );
 }

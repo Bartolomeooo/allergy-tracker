@@ -42,4 +42,12 @@ export const handlers = [
 
     return HttpResponse.json(newExposure, {status: 201});
   }),
+
+  // GET /api/exposure-types/:id
+  http.get('/api/exposure-types/:id', ({params}) => {
+    const id = Number(params.id);
+    const item = exposureTypes.find((x) => x.id === id);
+    if (!item) return new HttpResponse('Not Found', {status: 404});
+    return HttpResponse.json(item);
+  }),
 ];
