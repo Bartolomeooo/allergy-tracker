@@ -50,4 +50,13 @@ export const handlers = [
     if (!item) return new HttpResponse('Not Found', {status: 404});
     return HttpResponse.json(item);
   }),
+
+  // DELETE /api/entries/:id
+  http.delete('/api/entries/:id', ({params}) => {
+    const id = Number(params.id);
+    const idx = entriesStore.findIndex((x) => x.id === id);
+    if (idx === -1) return new HttpResponse('Not Found', {status: 404});
+    entriesStore.splice(idx, 1);
+    return new HttpResponse(null, {status: 204});
+  }),
 ];
