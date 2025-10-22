@@ -1,29 +1,25 @@
-import {useEffect, useState} from 'react';
+import {useQuery} from '@tanstack/react-query';
 import type {Entry} from '../mocks/types';
 import {apiGet} from '../api/client';
 
-export function useEntries() {
-  const [data, setData] = useState<Entry[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+export function useEntries(options?: {
+  refetchInterval?: number;
+  staleTime?: number;
+}) {
+  const {refetchInterval, staleTime = 30_000} = options ?? {};
 
-  useEffect(() => {
-    let alive = true;
-    setLoading(true);
-    setError(null);
-    apiGet<Entry[]>('/api/entries')
-      .then((res) => {
-        if (alive) setData(res);
-      })
-      .catch(
-        (e) =>
-          alive && setError(e instanceof Error ? e.message : 'Błąd ładowania'),
-      )
-      .finally(() => alive && setLoading(false));
-    return () => {
-      alive = false;
-    };
-  }, []);
+  const query = useQuery<Entry[], Error>({
+    queryKey: ['entries'],
+    queryFn: () => apiGet<Entry[]>('/api/entries'),
+    staleTime,
+    refetchOnWindowFocus: false,
+    refetchInterval,
+  });
 
-  return {data, setData, loading, error};
+  return {
+    data: query.data ?? [],
+    loading: query.isLoading,
+    error: query.error ? query.error.message : null,
+    refetch: query.refetch,
+  };
 }

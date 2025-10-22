@@ -15,6 +15,7 @@ It defines all endpoints currently implemented in the frontend mock layer (MSW) 
 | GET    | `/api/exposure-types/2' | Returns details of a specific exposure (allergen) type  |
 | POST   | `/api/entries`          | Creates a new journal entry |
 | POST   | `/api/exposure-types`   | Creates a new exposure (allergen) type |
+| DELETE | `/api/entries/:id`      | Deletes a specific journal entry |
 
 ---
 
@@ -139,6 +140,7 @@ The endpoint returns the created entry object with a generated `id`.
   "note": "Symptoms after a walk in the park"
 }
 ```
+
 ---
 ## POST `/api/exposure-types`
 
@@ -155,5 +157,13 @@ The endpoint returns the created exposure type object with a generated `id`.
   "description": "Pollen from grains can cause seasonal allergy symptoms."
 }
 ```
+
+---
+## DELETE `/api/entries/:id`
+
+### Description
+Deletes an existing allergy journal entry identified by its unique `id`.
+Once deleted, the entry is permanently removed from the user’s journal.
+
 
 

@@ -1,18 +1,53 @@
-import {useState} from 'react';
+import {useMutation, useQueryClient} from '@tanstack/react-query';
 import {apiPost} from '../api/client';
 import type {Entry, NewEntry} from '../mocks/types';
 
+type Ctx = {prev: Entry[]; tempId: number};
+
 export function useSaveEntry() {
-  const [submitting, setSubmitting] = useState(false);
+  const qc = useQueryClient();
 
-  const save = async (body: NewEntry): Promise<Entry> => {
-    try {
-      setSubmitting(true);
-      return await apiPost<Entry>('/api/entries', body);
-    } finally {
-      setSubmitting(false);
-    }
+  const mutation = useMutation<Entry, unknown, NewEntry, Ctx>({
+    mutationFn: (body) => apiPost<Entry>('/api/entries', body),
+
+    onMutate: async (body) => {
+      await qc.cancelQueries({queryKey: ['entries']});
+      const prev = qc.getQueryData<Entry[]>(['entries']) ?? [];
+
+      const temp: Entry = {
+        id: -Date.now(),
+        ...body,
+      };
+
+      qc.setQueryData<Entry[]>(['entries'], (old) => [temp, ...(old ?? [])]);
+
+      return {prev, tempId: temp.id};
+    },
+
+    onSuccess: (created, _body, ctx) => {
+      qc.setQueryData<Entry[]>(['entries'], (old) => {
+        const arr = old ?? [];
+        const idx = arr.findIndex((e) => e.id === ctx?.tempId);
+        if (idx === -1) return [created, ...arr];
+        const copy = arr.slice();
+        copy[idx] = created;
+        return copy;
+      });
+    },
+
+    onError: (_err, _body, ctx) => {
+      if (ctx?.prev) {
+        qc.setQueryData<Entry[]>(['entries'], ctx.prev);
+      }
+    },
+
+    onSettled: async () => {
+      await qc.invalidateQueries({queryKey: ['entries']});
+    },
+  });
+
+  return {
+    save: mutation.mutateAsync,
+    submitting: mutation.isPending,
   };
-
-  return {save, submitting};
 }
