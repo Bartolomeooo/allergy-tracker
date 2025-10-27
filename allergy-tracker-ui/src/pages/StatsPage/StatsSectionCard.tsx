@@ -29,7 +29,7 @@ export default function StatsSectionCard({
         {empty ? (
           <Typography color="text.secondary">{emptyMessage}</Typography>
         ) : (
-          <Box sx={{height}}>{children}</Box>
+          <Box sx={{minHeight: height}}>{children}</Box>
         )}
       </CardContent>
     </Card>

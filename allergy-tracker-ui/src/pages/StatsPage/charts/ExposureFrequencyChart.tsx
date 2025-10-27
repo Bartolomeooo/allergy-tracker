@@ -1,11 +1,6 @@
-import {styled, useTheme} from '@mui/material/styles';
-import {
-  BarChart,
-  type BarProps,
-  type BarLabelProps,
-} from '@mui/x-charts/BarChart';
-import {useAnimate, useAnimateBar, useDrawingArea} from '@mui/x-charts/hooks';
-import {interpolateObject} from '@mui/x-charts-vendor/d3-interpolate';
+import {useTheme} from '@mui/material/styles';
+import {BarChart, type BarProps} from '@mui/x-charts/BarChart';
+import {useAnimateBar, useDrawingArea} from '@mui/x-charts/hooks';
 
 export type ExposureFrequencyRow = {
   name: string;
@@ -40,6 +35,8 @@ export default function ExposureFrequencyChart({data, height = 360}: Props) {
         {
           id: 'days',
           dataKey: 'days',
+          label: 'Dni z objawami',
+          valueFormatter: (v: number | null) => (v == null ? '' : `${v} dni`),
         },
       ]}
       xAxis={[
@@ -50,15 +47,9 @@ export default function ExposureFrequencyChart({data, height = 360}: Props) {
         },
       ]}
       yAxis={[{scaleType: 'band', dataKey: 'name', width: 180}]}
-      margin={{top: 16, right: 24, bottom: 16, left: 16}}
-      barLabel={(v) => `${v.value} dni`}
-      slots={{
-        bar: ColoredBar,
-        barLabel: BarLabelAtBase,
-      }}
-      slotProps={{
-        tooltip: {trigger: 'none'},
-      }}
+      margin={{top: 16, right: 24, bottom: 10, left: 16}}
+      slots={{bar: ColoredBar}}
+      hideLegend
     />
   );
 }
@@ -89,34 +80,4 @@ function ColoredBar(props: BarProps) {
       />
     </>
   );
-}
-
-const Text = styled('text')(({theme}) => ({
-  ...theme.typography.body2,
-  stroke: 'none',
-  fill: (theme.vars || theme).palette.common.white,
-  textAnchor: 'start',
-  dominantBaseline: 'central',
-  pointerEvents: 'none',
-  fontWeight: 600,
-}));
-
-function BarLabelAtBase(props: BarLabelProps) {
-  const {xOrigin, y, height, skipAnimation, ...otherProps} = props;
-
-  const animatedProps = useAnimate(
-    {x: xOrigin + 8, y: y + height / 2},
-    {
-      initialProps: {x: xOrigin, y: y + height / 2},
-      createInterpolator: interpolateObject,
-      transformProps: (p) => p,
-      applyProps: (el: SVGTextElement, p) => {
-        el.setAttribute('x', p.x.toString());
-        el.setAttribute('y', p.y.toString());
-      },
-      skip: skipAnimation,
-    },
-  );
-
-  return <Text {...otherProps} {...animatedProps} />;
 }

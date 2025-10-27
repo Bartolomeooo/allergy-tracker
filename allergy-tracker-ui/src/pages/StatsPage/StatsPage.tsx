@@ -5,7 +5,9 @@ import StatsSectionCard from './StatsSectionCard';
 import ExposureFrequencyChart from './charts/ExposureFrequencyChart';
 import SymptomsShareChart from './charts/SymptomsShareChart';
 import {getTopExposures} from '../../utils/stats/getTopExposures';
-import {getSymptomsShare} from '../../utils/stats/getSymptomsShare.ts';
+import {getSymptomsShare} from '../../utils/stats/getSymptomsShare';
+import {getExposureSymptoms} from '../../utils/stats/getExposureSymptoms.ts';
+import ExposureSymptomsStackedBarChart from './charts/ExposureSymptomsStackedBarChart.tsx';
 
 export default function StatsPage() {
   const {data: entries, loading, error} = useEntries();
@@ -17,6 +19,11 @@ export default function StatsPage() {
 
   const symptomsShare = React.useMemo(
     () => getSymptomsShare(entries),
+    [entries],
+  );
+
+  const heat = React.useMemo(
+    () => getExposureSymptoms(entries, {topN: 10}),
     [entries],
   );
 
@@ -44,6 +51,15 @@ export default function StatsPage() {
         empty={symptomsShare.length === 0}
       >
         <SymptomsShareChart data={symptomsShare} />
+      </StatsSectionCard>
+
+      <StatsSectionCard
+        title="Wpływ ekspozycji na objawy"
+        subheader="Średni procentowy udział grup objawów w całkowitej liczbie objawów, gdy dana ekspozycja wystąpiła"
+        height={Math.max(360, 28 * (heat.yLabels.length + 5))}
+        empty={heat.yLabels.length === 0}
+      >
+        <ExposureSymptomsStackedBarChart {...heat} />
       </StatsSectionCard>
     </Stack>
   );
