@@ -15,10 +15,10 @@ import type {Entry} from '../../../mocks/types';
 
 type Props = {
   row: Entry;
-  nameToId: Record<string, number>;
-  onPreview: (id: number) => void;
-  onEdit?: (id: number) => void;
-  onDelete?: (id: number) => void;
+  nameToId: Record<string, string>;
+  onPreview: (id: string) => void;
+  onEdit?: (id: string) => void;
+  onDelete?: (id: string) => void;
 };
 
 export default function EntryRow({

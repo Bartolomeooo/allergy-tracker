@@ -1,26 +1,26 @@
 [
   {
-    "id": 1,
+    "id": "e3d58e5f-75ce-4d85-b1c4-9fd95b4eb8c0",
     "name": "Truskawka",
     "description": "Owoc sezonowy, często powoduje reakcje alergiczne u dzieci."
   },
   {
-    "id": 2,
+    "id": "a67b2c3e-13e9-4e6a-bbe8-197be4acbf03",
     "name": "Brzoza",
     "description": "Pyłek brzozy jest jedną z najczęstszych przyczyn alergii wiosennych."
   },
   {
-    "id": 3,
+    "id": "b38cfb84-4b36-46b3-95c5-2e03c8328c5c",
     "name": "Kurz",
     "description": "Zawiera roztocza kurzu domowego – typowy alergen całoroczny."
   },
   {
-    "id": 4,
+    "id": "f55e8910-d6d1-49c7-b9da-1af7bce6dbf0",
     "name": "Kot",
     "description": "Alergeny pochodzą głównie ze śliny i sierści kota."
   },
   {
-    "id": 5,
+    "id": "3b4f013c-3b3c-4a6f-8a09-8a28b0a1bcb4",
     "name": "Pies",
     "description": "Podobnie jak koty, psy wydzielają alergeny w ślinie i naskórku."
   }

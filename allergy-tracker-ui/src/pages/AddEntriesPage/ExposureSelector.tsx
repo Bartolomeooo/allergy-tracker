@@ -13,10 +13,10 @@ type Props = {
 
 export default function ExposureSelector({value, onChange, disabled}: Props) {
   const [options, setOptions] = useState<string[]>([]);
-  const [nameToId, setNameToId] = useState<Record<string, number>>({});
+  const [nameToId, setNameToId] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [previewId, setPreviewId] = useState<number | null>(null);
+  const [previewId, setPreviewId] = useState<string | null>(null);
 
   useEffect(() => {
     let mounted = true;

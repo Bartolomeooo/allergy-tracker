@@ -14,7 +14,7 @@ import type {ExposureType} from '../mocks/types';
 
 type Props = {
   open: boolean;
-  id: number | null;
+  id: string | null;
   onClose: () => void;
 };
 
