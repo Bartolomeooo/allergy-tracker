@@ -53,7 +53,7 @@ public class Entry {
     Instant createdAt;
     Instant updatedAt;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
         name = ENTRY_EXPOSURE_TYPES_TABLE_NAME,
         joinColumns = @JoinColumn(name = ENTRY_EXPOSURE_TYPES_ENTRY_ID),
