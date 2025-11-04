@@ -21,7 +21,7 @@ public class ExposureType {
 
     static final String TABLE_NAME = "exposure_types";
     static final String VALUE_COLUMN_NAME = "value";
-
+    private static final String DESCRIPTION_COLUMN_NAME = "description";
     private static final String ID_COLUMN_NAME = "id";
 
     @Id
@@ -30,4 +30,7 @@ public class ExposureType {
 
     @Column(name = VALUE_COLUMN_NAME, nullable = false)
     private String value;
+
+    @Column(name = DESCRIPTION_COLUMN_NAME)
+    private String description;
 }
