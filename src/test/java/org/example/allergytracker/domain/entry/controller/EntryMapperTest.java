@@ -264,7 +264,7 @@ class EntryMapperTest {
     var entry = fromDto(dto, List.of());
 
     // Then
-    assertEquals(expectedDate, entry.occuredOn());
+    assertEquals(expectedDate, entry.occurredOn());
   }
 
   @Test
