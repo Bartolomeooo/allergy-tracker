@@ -6,8 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class AllergyTrackerApplication {
 
-    public static void main(String[] args) {
-        SpringApplication.run(AllergyTrackerApplication.class, args);
-    }
-
+  public static void main(String[] args) {
+    SpringApplication.run(AllergyTrackerApplication.class, args);
+  }
 }

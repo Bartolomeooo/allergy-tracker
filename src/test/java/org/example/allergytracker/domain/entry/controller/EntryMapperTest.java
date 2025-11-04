@@ -136,4 +136,164 @@ class EntryMapperTest {
     // Then
     assertNull(actualDto.note());
   }
+
+  @Test
+  void shouldCalculateTotalCorrectly() {
+    // Given - all zeros
+    var entryAllZeros = new Entry(
+        ENTRY_ID,
+        ENTRY_DATE,
+        new Symptoms(0),
+        new Symptoms(0),
+        new Symptoms(0),
+        new Symptoms(0),
+        new Note(null),
+        Instant.now(),
+        Instant.now(),
+        List.of()
+    );
+
+    // When
+    var dto = toDto(entryAllZeros);
+
+    // Then
+    assertEquals(0, dto.total());
+  }
+
+  @Test
+  void shouldCalculateTotalForMaxValues() {
+    // Given - max values (assuming max is 10 per symptom)
+    var entryMaxValues = new Entry(
+        ENTRY_ID,
+        ENTRY_DATE,
+        new Symptoms(10),
+        new Symptoms(10),
+        new Symptoms(10),
+        new Symptoms(10),
+        new Note(null),
+        Instant.now(),
+        Instant.now(),
+        List.of()
+    );
+
+    // When
+    var dto = toDto(entryMaxValues);
+
+    // Then
+    assertEquals(40, dto.total());
+  }
+
+  @Test
+  void shouldHandleEmptyExposuresList() {
+    // Given
+    var entryNoExposures = new Entry(
+        ENTRY_ID,
+        ENTRY_DATE,
+        new Symptoms(1),
+        new Symptoms(1),
+        new Symptoms(1),
+        new Symptoms(1),
+        new Note("Note"),
+        Instant.now(),
+        Instant.now(),
+        List.of()
+    );
+
+    // When
+    var dto = toDto(entryNoExposures);
+
+    // Then
+    assertNotNull(dto.exposures());
+    assertTrue(dto.exposures().isEmpty());
+  }
+
+  @Test
+  void shouldGenerateUUIDWhenDtoIdIsNull() {
+    // Given
+    var occurredOn = ENTRY_DATE.atStartOfDay(ZoneId.systemDefault()).toInstant();
+    var dto = new EntryDto(
+        null, // no ID
+        occurredOn,
+        1, 1, 1, 1, 4,
+        List.of(),
+        "Note"
+    );
+
+    // When
+    var entry = fromDto(dto, List.of());
+
+    // Then
+    assertNotNull(entry.id());
+  }
+
+  @Test
+  void shouldPreserveUUIDWhenDtoIdIsProvided() {
+    // Given
+    var customId = UUID.randomUUID();
+    var occurredOn = ENTRY_DATE.atStartOfDay(ZoneId.systemDefault()).toInstant();
+    var dto = new EntryDto(
+        customId,
+        occurredOn,
+        1, 1, 1, 1, 4,
+        List.of(),
+        "Note"
+    );
+
+    // When
+    var entry = fromDto(dto, List.of());
+
+    // Then
+    assertEquals(customId, entry.id());
+  }
+
+  @Test
+  void shouldConvertTimestampCorrectly() {
+    // Given
+    var specificInstant = Instant.parse("2025-11-04T10:15:30.00Z");
+    var expectedDate = specificInstant.atZone(ZoneId.systemDefault()).toLocalDate();
+
+    var dto = new EntryDto(
+        ENTRY_ID,
+        specificInstant,
+        1, 1, 1, 1, 4,
+        List.of(),
+        null
+    );
+
+    // When
+    var entry = fromDto(dto, List.of());
+
+    // Then
+    assertEquals(expectedDate, entry.occuredOn());
+  }
+
+  @Test
+  void shouldMapMultipleExposuresCorrectly() {
+    // Given
+    var exp1 = new ExposureType(UUID.randomUUID(), "Birch", "Tree pollen");
+    var exp2 = new ExposureType(UUID.randomUUID(), "Grass", "Grass pollen");
+    var exp3 = new ExposureType(UUID.randomUUID(), "Mold", "Indoor mold");
+
+    var entry = new Entry(
+        ENTRY_ID,
+        ENTRY_DATE,
+        new Symptoms(1),
+        new Symptoms(1),
+        new Symptoms(1),
+        new Symptoms(1),
+        new Note(null),
+        Instant.now(),
+        Instant.now(),
+        List.of(exp1, exp2, exp3)
+    );
+
+    // When
+    var dto = toDto(entry);
+
+    // Then
+    assertEquals(3, dto.exposures().size());
+    assertTrue(dto.exposures().contains("Birch"));
+    assertTrue(dto.exposures().contains("Grass"));
+    assertTrue(dto.exposures().contains("Mold"));
+  }
 }
