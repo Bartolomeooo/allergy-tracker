@@ -19,7 +19,7 @@ import {apiGet} from '../../api/client';
 import {buildNewEntry, isEntryFormEmpty} from '../../utils/entries';
 import type {Entry} from '../../mocks/types';
 
-type LocationState = {entryId?: number} | null;
+type LocationState = {entryId?: string} | null;
 
 export default function AddEntriesPage() {
   const navigate = useNavigate();

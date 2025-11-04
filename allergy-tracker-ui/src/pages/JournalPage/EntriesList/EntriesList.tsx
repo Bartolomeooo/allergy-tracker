@@ -18,8 +18,8 @@ export default function EntriesList({
   onEdit,
   onDelete,
 }: {
-  onEdit?: (id: number) => void;
-  onDelete?: (id: number) => void;
+  onEdit?: (id: string) => void;
+  onDelete?: (id: string) => void;
 }) {
   const {data, loading, error} = useEntries();
   const nameToId = useExposureMap();
@@ -28,7 +28,7 @@ export default function EntriesList({
   const [to, setTo] = useState<Dayjs | null>(null);
   const [sortKey, setSortKey] = useState<SortKey>('occurredOn');
   const [sortDir, setSortDir] = useState<SortDir>('desc');
-  const [previewId, setPreviewId] = useState<number | null>(null);
+  const [previewId, setPreviewId] = useState<string | null>(null);
 
   const inRange = (iso: string, start: Dayjs | null, end: Dayjs | null) => {
     if (!start && !end) return true;

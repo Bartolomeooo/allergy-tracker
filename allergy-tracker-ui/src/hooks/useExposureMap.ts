@@ -3,7 +3,7 @@ import type {ExposureType} from '../mocks/types';
 import {apiGet} from '../api/client';
 
 export function useExposureMap() {
-  const [nameToId, setNameToId] = useState<Record<string, number>>({});
+  const [nameToId, setNameToId] = useState<Record<string, string>>({});
 
   useEffect(() => {
     let alive = true;

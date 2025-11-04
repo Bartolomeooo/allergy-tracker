@@ -1,11 +1,11 @@
-export interface ExposureType {
-  id: number;
+export type ExposureType = {
+  id: string;
   name: string;
   description?: string;
-}
+};
 
-export interface Entry {
-  id: number;
+export type Entry = {
+  id: string;
   occurredOn: string;
   upperRespiratory: number;
   lowerRespiratory: number;
@@ -14,6 +14,6 @@ export interface Entry {
   total: number;
   exposures: string[];
   note?: string;
-}
+};
 
 export type NewEntry = Omit<Entry, 'id'>;

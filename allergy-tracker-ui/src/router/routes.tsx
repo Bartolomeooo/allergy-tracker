@@ -3,13 +3,14 @@ import type {RouteObject} from 'react-router-dom';
 import {PATHS} from './paths';
 import Layout from '../layouts/Layout';
 
-const JournalPage = lazy(() => import('../pages/JournalPage/JournalPage.tsx'));
+const JournalPage = lazy(() => import('../pages/JournalPage/JournalPage'));
 const AddEntriesPage = lazy(
   () => import('../pages/AddEntriesPage/AddEntriesPage'),
 );
 const AddExposureTypePage = lazy(
   () => import('../pages/AddExposureTypePage/AddExposureTypePage'),
 );
+const StatsPage = lazy(() => import('../pages/StatsPage/StatsPage'));
 
 export const routes: RouteObject[] = [
   {
@@ -19,6 +20,7 @@ export const routes: RouteObject[] = [
       {index: true, element: <JournalPage />},
       {path: PATHS.addEntry, element: <AddEntriesPage />},
       {path: PATHS.addExposure, element: <AddExposureTypePage />},
+      {path: PATHS.stats, element: <StatsPage />},
     ],
   },
 ];

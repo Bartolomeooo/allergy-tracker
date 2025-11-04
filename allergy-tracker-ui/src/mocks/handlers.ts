@@ -6,6 +6,10 @@ import type {Entry, NewEntry, ExposureType} from './types';
 const entriesStore: Entry[] = entriesRaw as Entry[];
 const exposureTypes: ExposureType[] = exposureTypesRaw as ExposureType[];
 
+const genId = () =>
+  globalThis.crypto?.randomUUID?.() ??
+  `m-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+
 export const handlers = [
   // GET /api/exposure-types
   http.get('/api/exposure-types', () => HttpResponse.json(exposureTypes)),
@@ -16,7 +20,7 @@ export const handlers = [
   // POST /api/entries
   http.post('/api/entries', async ({request}) => {
     const body = (await request.json()) as NewEntry;
-    const newEntry: Entry = {id: Date.now(), ...body};
+    const newEntry: Entry = {id: genId(), ...body};
     entriesStore.unshift(newEntry);
     return HttpResponse.json(newEntry, {status: 201});
   }),
@@ -33,7 +37,7 @@ export const handlers = [
     const description = body?.description?.toString().trim() || undefined;
 
     const newExposure: ExposureType = {
-      id: Date.now(),
+      id: genId(),
       name,
       ...(description ? {description} : {}),
     };
@@ -45,7 +49,7 @@ export const handlers = [
 
   // GET /api/exposure-types/:id
   http.get('/api/exposure-types/:id', ({params}) => {
-    const id = Number(params.id);
+    const {id} = params as {id: string};
     const item = exposureTypes.find((x) => x.id === id);
     if (!item) return new HttpResponse('Not Found', {status: 404});
     return HttpResponse.json(item);
@@ -53,7 +57,7 @@ export const handlers = [
 
   // DELETE /api/entries/:id
   http.delete('/api/entries/:id', ({params}) => {
-    const id = Number(params.id);
+    const {id} = params as {id: string};
     const idx = entriesStore.findIndex((x) => x.id === id);
     if (idx === -1) return new HttpResponse('Not Found', {status: 404});
     entriesStore.splice(idx, 1);
@@ -62,7 +66,7 @@ export const handlers = [
 
   // GET /api/entries/:id
   http.get('/api/entries/:id', ({params}) => {
-    const id = Number(params.id);
+    const {id} = params as {id: string};
     const entry = entriesStore.find((x) => x.id === id);
     if (!entry) return new HttpResponse('Not Found', {status: 404});
     return HttpResponse.json(entry);
@@ -70,7 +74,7 @@ export const handlers = [
 
   // PUT /api/entries/:id
   http.put('/api/entries/:id', async ({params, request}) => {
-    const id = Number(params.id);
+    const {id} = params as {id: string};
     const idx = entriesStore.findIndex((x) => x.id === id);
     if (idx === -1) return new HttpResponse('Not Found', {status: 404});
 

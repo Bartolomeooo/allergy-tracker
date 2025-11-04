@@ -2,7 +2,11 @@ import {useMutation, useQueryClient} from '@tanstack/react-query';
 import {apiPost} from '../api/client';
 import type {Entry, NewEntry} from '../mocks/types';
 
-type Ctx = {prev: Entry[]; tempId: number};
+type Ctx = {prev: Entry[]; tempId: string};
+
+const genId = () =>
+  globalThis.crypto?.randomUUID?.() ??
+  `tmp-${Date.now()}-${Math.random().toString(36).slice(2)}`;
 
 export function useSaveEntry() {
   const qc = useQueryClient();
@@ -14,8 +18,9 @@ export function useSaveEntry() {
       await qc.cancelQueries({queryKey: ['entries']});
       const prev = qc.getQueryData<Entry[]>(['entries']) ?? [];
 
+      const tempId = genId();
       const temp: Entry = {
-        id: -Date.now(),
+        id: tempId,
         ...body,
       };
 

@@ -6,9 +6,9 @@ export function useDeleteEntry() {
   const qc = useQueryClient();
 
   const mutation = useMutation({
-    mutationFn: (id: number) => apiDelete(`/api/entries/${id}`),
+    mutationFn: (id: string) => apiDelete(`/api/entries/${id}`),
 
-    onMutate: async (id: number) => {
+    onMutate: async (id: string) => {
       await qc.cancelQueries({queryKey: ['entries']});
       const prev = qc.getQueryData<Entry[]>(['entries']) ?? [];
       qc.setQueryData<Entry[]>(['entries'], (old) =>

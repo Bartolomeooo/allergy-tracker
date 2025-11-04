@@ -2,7 +2,7 @@ import {useMutation, useQueryClient} from '@tanstack/react-query';
 import {apiPut} from '../api/client';
 import type {Entry, NewEntry} from '../mocks/types';
 
-type Vars = {id: number; body: NewEntry};
+type Vars = {id: string; body: NewEntry};
 type Ctx = {prev: Entry[]};
 
 export function useUpdateEntry() {

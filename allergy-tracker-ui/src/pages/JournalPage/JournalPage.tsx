@@ -11,13 +11,13 @@ export default function JournalPage() {
   const navigate = useNavigate();
   const {deleteEntry, pending} = useDeleteEntry();
   const {open, msg, sev, show, hide} = useToast();
-  const [pendingDeleteId, setPendingDeleteId] = useState<number | null>(null);
+  const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
 
-  const editEntry = (id: number) => {
+  const editEntry = (id: string) => {
     void navigate(PATHS.addEntry, {state: {entryId: id}});
   };
 
-  const askDelete = useCallback((id: number) => {
+  const askDelete = useCallback((id: string) => {
     setPendingDeleteId(id);
   }, []);
 
