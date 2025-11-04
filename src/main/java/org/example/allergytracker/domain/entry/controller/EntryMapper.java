@@ -42,13 +42,13 @@ public class EntryMapper {
     }
 
     public static Entry fromDto(EntryDto dto, List<ExposureType> exposureTypes) {
-        var occuredOn = dto.occurredOn()
+        var occurredOn = dto.occurredOn()
                 .atZone(ZoneId.systemDefault())
                 .toLocalDate();
 
         return new Entry(
                 dto.id() != null ? dto.id() : UUID.randomUUID(),
-                occuredOn,
+                occurredOn,
                 new Symptoms(dto.upperRespiratory()),
                 new Symptoms(dto.lowerRespiratory()),
                 new Symptoms(dto.skin()),
