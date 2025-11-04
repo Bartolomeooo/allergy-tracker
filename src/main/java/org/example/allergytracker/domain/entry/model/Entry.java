@@ -31,7 +31,7 @@ public class Entry {
     @GeneratedValue(strategy = GenerationType.AUTO)
     UUID id;
 
-    LocalDate occuredOn;
+    LocalDate occurredOn;
 
     @Embedded
     @AttributeOverride(name = "value", column = @Column(name = UPPER_RESPIRATORY_COL))
