@@ -37,7 +37,7 @@ public class EntryMapper {
                 entry.eyes().value(),
                 total,
                 exposures,
-                entry.note().value().orElse(null)
+                entry.note().value()
         );
     }
 
