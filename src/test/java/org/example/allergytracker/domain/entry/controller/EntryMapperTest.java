@@ -80,7 +80,7 @@ class EntryMapperTest {
 
     // Then
     assertEquals(ENTRY_ID, actualEntry.id());
-    assertEquals(ENTRY_DATE, actualEntry.occuredOn());
+    assertEquals(ENTRY_DATE, actualEntry.occurredOn());
     assertEquals(UPPER_RESPIRATORY, actualEntry.upperRespiratory().value());
     assertEquals(LOWER_RESPIRATORY, actualEntry.lowerRespiratory().value());
     assertEquals(SKIN, actualEntry.skin().value());
