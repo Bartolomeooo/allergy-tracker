@@ -24,7 +24,7 @@ public class EntryMapper {
                 .map(ExposureType::value)
                 .toList();
 
-        var occurredOn = entry.occuredOn()
+        var occurredOn = entry.occurredOn()
                 .atStartOfDay(ZoneId.systemDefault())
                 .toInstant();
 
