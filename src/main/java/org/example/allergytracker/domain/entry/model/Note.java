@@ -18,7 +18,4 @@ public class Note {
     @Nullable
     private String value;
 
-    public Optional<String> value() {
-        return Optional.ofNullable(value);
-    }
 }
