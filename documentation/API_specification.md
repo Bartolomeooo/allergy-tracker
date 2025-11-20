@@ -12,12 +12,17 @@ It defines all endpoints currently implemented in the frontend mock layer (MSW) 
 |:-------|:--------------------------|:--------------------------------|
 | GET    | `/api/exposure-types`     | Returns available exposure (allergen) types |
 | GET    | `/api/entries`            | Returns all user journal entries |
-| GET    | `/api/exposure-types/:id`  | Returns details of a specific exposure (allergen) type  |
+| GET    | `/api/exposure-types/:id` | Returns details of a specific exposure (allergen) type  |
 | GET    | `/api/entries/:id`        | Returns details of a specific journal entry  |
 | POST   | `/api/entries`            | Creates a new journal entry |
 | POST   | `/api/exposure-types`     | Creates a new exposure (allergen) type |
 | PUT    | `/api/entries/:id`        | Updates an existing journal entry |
 | DELETE | `/api/entries/:id`        | Deletes a specific journal entry |
+| POST   | `/auth/login`             | Logs in a user and returns an access token |
+| POST   | `/auth/register`          | Registers a new user and returns an access token |
+| POST   | `/auth/refresh`           | Issues a new access token based on refresh token |
+| POST   | `/auth/logout`            | Logs out the user and clears the refresh cookie |
+| GET    | `/me`                     | Returns the currently authenticated user |
 
 ---
 
@@ -212,5 +217,125 @@ The endpoint returns the updated entry object.
 Deletes an existing allergy journal entry identified by its unique `id`.
 Once deleted, the entry is permanently removed from the user’s journal.
 
+---
+## POST `/auth/register`
 
+Registers a new user and logs them in.
+
+### Example Request
+```json
+{
+  "email": "user@example.com",
+  "password": "example"
+}
+```
+
+Successful Response — `201 Created`
+```
+{
+  "accessToken": "<jwt-like-token>",
+  "user": {
+    "id": "7b2a6b39-2e5a-4e55-9ef4-09c1c4f59711",
+    "email": "user@example.com"
+  }
+}
+```
+Error Responses
+
+`400 Bad Request` — invalid payload
+
+`409 Conflict` — email already in use
+
+```
+{
+"message": "Email already in use"
+}
+```
+
+---
+## POST `/auth/login`
+
+Logs in an existing user.
+
+### Example Request
+```json
+{
+  "email": "user@example.com",
+  "password": "example"
+}
+```
+
+Successful Response — `200 OK`
+```
+{
+  "accessToken": "<jwt-like-token>",
+  "user": {
+    "id": "7b2a6b39-2e5a-4e55-9ef4-09c1c4f59711",
+    "email": "user@example.com"
+  }
+}
+```
+Error Responses
+
+`400 Bad Request` — invalid payload
+
+`401 Unauthorized` — invalid credentials
+
+```
+{
+  "message": "Invalid credentials"
+}
+```
+
+---
+## POST `/auth/refresh`
+
+Issues a new access token based on the refresh token cookie.
+
+Successful Response — `200 OK`
+```
+{
+  "accessToken": "<jwt-like-token>",
+  }
+}
+```
+Error Responses
+
+`401 Unauthorized` when:
+- cookie is missing:
+```
+{ "message": "No refresh token" }
+```
+
+- cookie is invalid:
+```
+{ "message": "Invalid refresh" }
+```
+
+---
+## POST `/auth/logout`
+
+Logs out the current user.
+
+Successful Response — `204 No Content`
+
+---
+## GET `/me`
+
+Returns the currently authenticated user.
+
+Successful Response — `200 OK`
+```
+{
+  "user": {
+    "id": "7b2a6b39-2e5a-4e55-9ef4-09c1c4f59711",
+    "email": "user@example.com"
+  }
+}
+```
+Error Responses
+
+`401 Unauthorized` — when token is missing/invalid
+
+`404 Not Found` — when user from token does not exist
 
