@@ -19,8 +19,15 @@ export function useUpdateEntry() {
         const arr = old ?? [];
         const idx = arr.findIndex((e) => e.id === id);
         if (idx === -1) return arr;
+
+        const existing = arr[idx];
+
         const copy = arr.slice();
-        copy[idx] = {id, ...body};
+        copy[idx] = {
+          ...existing,
+          ...body,
+          id,
+        };
         return copy;
       });
 
@@ -45,7 +52,9 @@ export function useUpdateEntry() {
 
     onSettled: async (_data, _err, vars) => {
       await qc.invalidateQueries({queryKey: ['entries']});
-      if (vars?.id) await qc.invalidateQueries({queryKey: ['entry', vars.id]});
+      if (vars?.id) {
+        await qc.invalidateQueries({queryKey: ['entry', vars.id]});
+      }
     },
   });
 
