@@ -6,6 +6,7 @@ export type ExposureType = {
 
 export type Entry = {
   id: string;
+  userId: string;
   occurredOn: string;
   upperRespiratory: number;
   lowerRespiratory: number;
@@ -16,4 +17,4 @@ export type Entry = {
   note?: string;
 };
 
-export type NewEntry = Omit<Entry, 'id'>;
+export type NewEntry = Omit<Entry, 'id' | 'userId'>;

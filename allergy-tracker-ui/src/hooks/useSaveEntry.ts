@@ -21,6 +21,7 @@ export function useSaveEntry() {
       const tempId = genId();
       const temp: Entry = {
         id: tempId,
+        userId: 'optimistic',
         ...body,
       };
 

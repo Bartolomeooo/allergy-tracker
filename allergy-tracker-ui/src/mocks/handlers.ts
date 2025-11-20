@@ -2,6 +2,8 @@ import {http, HttpResponse} from 'msw';
 import entriesRaw from './data/entries.json';
 import exposureTypesRaw from './data/exposure-types.json';
 import type {Entry, NewEntry, ExposureType} from './types';
+import {authHandlers} from './auth';
+import {requireAuth} from './auth/requireAuth';
 
 const entriesStore: Entry[] = entriesRaw as Entry[];
 const exposureTypes: ExposureType[] = exposureTypesRaw as ExposureType[];
@@ -10,23 +12,20 @@ const genId = () =>
   globalThis.crypto?.randomUUID?.() ??
   `m-${Date.now()}-${Math.random().toString(36).slice(2)}`;
 
-export const handlers = [
+const coreHandlers = [
   // GET /api/exposure-types
-  http.get('/api/exposure-types', () => HttpResponse.json(exposureTypes)),
+  http.get('/api/exposure-types', ({request}) => {
+    const auth = requireAuth(request);
+    if (auth instanceof HttpResponse) return auth;
 
-  // GET /api/entries
-  http.get('/api/entries', () => HttpResponse.json(entriesStore)),
-
-  // POST /api/entries
-  http.post('/api/entries', async ({request}) => {
-    const body = (await request.json()) as NewEntry;
-    const newEntry: Entry = {id: genId(), ...body};
-    entriesStore.unshift(newEntry);
-    return HttpResponse.json(newEntry, {status: 201});
+    return HttpResponse.json(exposureTypes);
   }),
 
   // POST /api/exposure-types
   http.post('/api/exposure-types', async ({request}) => {
+    const auth = requireAuth(request);
+    if (auth instanceof HttpResponse) return auth;
+
     const body = (await request.json()) as Partial<ExposureType> | undefined;
 
     const name = body?.name?.toString().trim();
@@ -48,34 +47,86 @@ export const handlers = [
   }),
 
   // GET /api/exposure-types/:id
-  http.get('/api/exposure-types/:id', ({params}) => {
+  http.get('/api/exposure-types/:id', ({params, request}) => {
+    const auth = requireAuth(request);
+    if (auth instanceof HttpResponse) return auth;
+
     const {id} = params as {id: string};
     const item = exposureTypes.find((x) => x.id === id);
     if (!item) return new HttpResponse('Not Found', {status: 404});
     return HttpResponse.json(item);
   }),
 
+  // GET /api/entries
+  http.get('/api/entries', ({request}) => {
+    const auth = requireAuth(request);
+    if (auth instanceof HttpResponse) return auth;
+
+    const list = entriesStore.filter((e) => e.userId === auth.sub);
+    return HttpResponse.json(list);
+  }),
+
+  // POST /api/entries
+  http.post('/api/entries', async ({request}) => {
+    const auth = requireAuth(request);
+    if (auth instanceof HttpResponse) return auth;
+
+    const body = (await request.json()) as NewEntry;
+
+    const newEntry: Entry = {
+      id: genId(),
+      userId: auth.sub,
+      occurredOn: body.occurredOn,
+      upperRespiratory: body.upperRespiratory,
+      lowerRespiratory: body.lowerRespiratory,
+      skin: body.skin,
+      eyes: body.eyes,
+      total: body.total,
+      exposures: body.exposures,
+      note: body.note,
+    };
+
+    entriesStore.unshift(newEntry);
+    return HttpResponse.json(newEntry, {status: 201});
+  }),
+
   // DELETE /api/entries/:id
-  http.delete('/api/entries/:id', ({params}) => {
+  http.delete('/api/entries/:id', ({params, request}) => {
+    const auth = requireAuth(request);
+    if (auth instanceof HttpResponse) return auth;
+
     const {id} = params as {id: string};
-    const idx = entriesStore.findIndex((x) => x.id === id);
+    const idx = entriesStore.findIndex(
+      (x) => x.id === id && x.userId === auth.sub,
+    );
     if (idx === -1) return new HttpResponse('Not Found', {status: 404});
     entriesStore.splice(idx, 1);
     return new HttpResponse(null, {status: 204});
   }),
 
   // GET /api/entries/:id
-  http.get('/api/entries/:id', ({params}) => {
+  http.get('/api/entries/:id', ({params, request}) => {
+    const auth = requireAuth(request);
+    if (auth instanceof HttpResponse) return auth;
+
     const {id} = params as {id: string};
-    const entry = entriesStore.find((x) => x.id === id);
+    const entry = entriesStore.find(
+      (x) => x.id === id && x.userId === auth.sub,
+    );
     if (!entry) return new HttpResponse('Not Found', {status: 404});
     return HttpResponse.json(entry);
   }),
 
   // PUT /api/entries/:id
   http.put('/api/entries/:id', async ({params, request}) => {
+    const auth = requireAuth(request);
+    if (auth instanceof HttpResponse) return auth;
+
     const {id} = params as {id: string};
-    const idx = entriesStore.findIndex((x) => x.id === id);
+
+    const idx = entriesStore.findIndex(
+      (x) => x.id === id && x.userId === auth.sub,
+    );
     if (idx === -1) return new HttpResponse('Not Found', {status: 404});
 
     const body = (await request.json()) as NewEntry;
@@ -84,9 +135,26 @@ export const handlers = [
       return new HttpResponse('Missing "occurredOn"', {status: 400});
     }
 
-    const updated: Entry = {id, ...body};
+    const existing = entriesStore[idx];
+
+    const updated: Entry = {
+      ...existing,
+      occurredOn: body.occurredOn,
+      upperRespiratory: body.upperRespiratory,
+      lowerRespiratory: body.lowerRespiratory,
+      skin: body.skin,
+      eyes: body.eyes,
+      total: body.total,
+      exposures: body.exposures,
+      note: body.note,
+      id: existing.id,
+      userId: existing.userId,
+    };
+
     entriesStore[idx] = updated;
 
     return HttpResponse.json(updated, {status: 200});
   }),
 ];
+
+export const handlers = [...authHandlers, ...coreHandlers];

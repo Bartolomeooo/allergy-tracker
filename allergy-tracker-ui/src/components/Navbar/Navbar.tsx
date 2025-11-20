@@ -1,4 +1,4 @@
-import {AppBar, Toolbar, Stack} from '@mui/material';
+import {AppBar, Toolbar, Stack, Button} from '@mui/material';
 import {PATHS} from '../../router/paths';
 
 import NavbarButton from './NavbarButton';
@@ -7,8 +7,15 @@ import NavbarLogoSection from './NavbarLogoSection';
 import ListAltOutlinedIcon from '@mui/icons-material/ListAltOutlined';
 import AddRoundedIcon from '@mui/icons-material/AddRounded';
 import BarChartOutlinedIcon from '@mui/icons-material/BarChartOutlined';
+import {useLogout} from '../../hooks/useAuth';
 
 export default function Navbar() {
+  const logout = useLogout();
+
+  const handleLogout = () => {
+    logout.mutate();
+  };
+
   return (
     <AppBar
       position="fixed"
@@ -33,6 +40,19 @@ export default function Navbar() {
           <NavbarButton to={PATHS.stats} icon={<BarChartOutlinedIcon />}>
             Statystyki
           </NavbarButton>
+
+          <Button
+            variant="outlined"
+            color="primary"
+            onClick={handleLogout}
+            disabled={logout.isPending}
+            sx={{
+              textTransform: 'none',
+              ml: 2,
+            }}
+          >
+            Wyloguj
+          </Button>
         </Stack>
       </Toolbar>
     </AppBar>
