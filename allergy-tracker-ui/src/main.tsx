@@ -2,6 +2,7 @@ import {StrictMode} from 'react';
 import {createRoot} from 'react-dom/client';
 import './index.css';
 import App from './App.tsx';
+import {tokenStore} from './api/client';
 
 async function enableMocksIfNeeded() {
   if (import.meta.env.DEV && import.meta.env.VITE_USE_MOCKS) {
@@ -15,6 +16,8 @@ async function enableMocksIfNeeded() {
 }
 
 function renderRoot() {
+  tokenStore.bootstrap();
+
   const root = createRoot(document.getElementById('root')!);
   root.render(
     <StrictMode>
