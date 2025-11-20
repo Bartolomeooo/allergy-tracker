@@ -1,6 +1,7 @@
 [
   {
     "id": "9f7c4f8a-1e3d-4c29-9e37-6d821c07f474",
+    "userId": "7b2a6b39-2e5a-4e55-9ef4-09c1c4f59711",
     "occurredOn": "2025-10-21T16:41:53.514Z",
     "upperRespiratory": 2,
     "lowerRespiratory": 5,
@@ -12,6 +13,7 @@
   },
   {
     "id": "c4c28d0d-72a3-4c35-9a9a-2af351cb5d47",
+    "userId": "7b2a6b39-2e5a-4e55-9ef4-09c1c4f59711",
     "occurredOn": "2025-10-14T13:21:53.514Z",
     "upperRespiratory": 4,
     "lowerRespiratory": 1,
@@ -23,6 +25,7 @@
   },
   {
     "id": "7b03c60e-22e7-4ef1-b25c-1e0f86c7f89f",
+    "userId": "7b2a6b39-2e5a-4e55-9ef4-09c1c4f59711",
     "occurredOn": "2025-11-26T22:48:53.514Z",
     "upperRespiratory": 3,
     "lowerRespiratory": 0,
@@ -34,6 +37,7 @@
   },
   {
     "id": "6a842f39-4a6d-4c64-b9d1-2edc4089d1ee",
+    "userId": "e4a24e6e-4f7a-4a1f-b64c-4c3f4bdb49a1",
     "occurredOn": "2025-10-20T12:47:53.514Z",
     "upperRespiratory": 0,
     "lowerRespiratory": 3,
@@ -41,6 +45,6 @@
     "eyes": 0,
     "total": 4,
     "exposures": ["Kot", "Pies", "Brzoza", "Kurz", "Truskawka"],
-    "note": "Wizyta u znajomych mających kota – pojawiły się łagodne objawy po kontakcie ze zwierzętami."
+    "note": "Wizyta u znajomych mających kota – pojawiły się łagodne objawy."
   }
 ]
