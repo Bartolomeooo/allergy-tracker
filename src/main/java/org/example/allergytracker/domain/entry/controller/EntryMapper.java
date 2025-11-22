@@ -14,65 +14,65 @@ import java.util.UUID;
 @Component
 public class EntryMapper {
 
-    public static EntryDto toDto(Entry entry) {
-        var total = entry.upperRespiratory().value() +
-                    entry.lowerRespiratory().value() +
-                    entry.skin().value() +
-                    entry.eyes().value();
+  public static EntryDto toDto(Entry entry) {
+    var total = entry.upperRespiratory().value() +
+            entry.lowerRespiratory().value() +
+            entry.skin().value() +
+            entry.eyes().value();
 
-        var exposures = entry.exposureTypes().stream()
-                .map(ExposureType::value)
-                .toList();
+    var exposures = entry.exposureTypes().stream()
+            .map(ExposureType::value)
+            .toList();
 
-        var occurredOn = entry.occurredOn()
-                .atStartOfDay(ZoneId.systemDefault())
-                .toInstant();
+    var occurredOn = entry.occurredOn()
+            .atStartOfDay(ZoneId.systemDefault())
+            .toInstant();
 
-        return new EntryDto(
-                entry.id(),
-                occurredOn,
-                entry.upperRespiratory().value(),
-                entry.lowerRespiratory().value(),
-                entry.skin().value(),
-                entry.eyes().value(),
-                total,
-                exposures,
-                entry.note().value()
-        );
-    }
+    return new EntryDto(
+            entry.id(),
+            occurredOn,
+            entry.upperRespiratory().value(),
+            entry.lowerRespiratory().value(),
+            entry.skin().value(),
+            entry.eyes().value(),
+            total,
+            exposures,
+            entry.note().value()
+    );
+  }
 
-    public static Entry fromDto(EntryDto dto, List<ExposureType> exposureTypes) {
-        var occurredOn = dto.occurredOn()
-                .atZone(ZoneId.systemDefault())
-                .toLocalDate();
+  public static Entry fromDto(EntryDto dto, List<ExposureType> exposureTypes) {
+    var occurredOn = dto.occurredOn()
+            .atZone(ZoneId.systemDefault())
+            .toLocalDate();
 
-        return new Entry(
-                dto.id() != null ? dto.id() : UUID.randomUUID(),
-                occurredOn,
-                new Symptoms(dto.upperRespiratory()),
-                new Symptoms(dto.lowerRespiratory()),
-                new Symptoms(dto.skin()),
-                new Symptoms(dto.eyes()),
-                new Note(dto.note()),
-                Instant.now(),
-                Instant.now(),
-                exposureTypes
-        );
-    }
+    return new Entry(
+            dto.id() != null ? dto.id() : UUID.randomUUID(),
+            occurredOn,
+            new Symptoms(dto.upperRespiratory()),
+            new Symptoms(dto.lowerRespiratory()),
+            new Symptoms(dto.skin()),
+            new Symptoms(dto.eyes()),
+            new Note(dto.note()),
+            Instant.now(),
+            Instant.now(),
+            exposureTypes
+    );
+  }
 
-    public static ExposureTypeDto toDto(ExposureType exposureType) {
-        return new ExposureTypeDto(
-                exposureType.id(),
-                exposureType.value(),
-                exposureType.description()
-        );
-    }
+  public static ExposureTypeDto toDto(ExposureType exposureType) {
+    return new ExposureTypeDto(
+            exposureType.id(),
+            exposureType.value(),
+            exposureType.description()
+    );
+  }
 
-    public static ExposureType fromDto(ExposureTypeDto dto) {
-        return new ExposureType(
-                dto.id() != null ? dto.id() : UUID.randomUUID(),
-                dto.name(),
-                dto.description()
-        );
-    }
+  public static ExposureType fromDto(ExposureTypeDto dto) {
+    return new ExposureType(
+            dto.id() != null ? dto.id() : UUID.randomUUID(),
+            dto.name(),
+            dto.description()
+    );
+  }
 }

@@ -7,5 +7,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface ExposureTypeRepository extends JpaRepository<ExposureType, UUID> {
+
     Optional<ExposureType> findByValue(String value);
 }

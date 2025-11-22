@@ -13,30 +13,30 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ExposureTypeController {
 
-    static final String EXPOSURE_TYPE_API_PATH = "/api/exposure-types";
-    static final String ID_PATH = "/{id}";
+  static final String EXPOSURE_TYPE_API_PATH = "/api/exposure-types";
+  static final String ID_PATH = "/{id}";
 
-    private final ExposureTypeService exposureTypeService;
+  private final ExposureTypeService exposureTypeService;
 
-    @GetMapping
-    public List<ExposureTypeDto> getAllExposureTypes() {
-        return exposureTypeService.findAll().stream()
-                .map(EntryMapper::toDto)
-                .toList();
-    }
+  @GetMapping
+  public List<ExposureTypeDto> getAllExposureTypes() {
+    return exposureTypeService.findAll().stream()
+            .map(EntryMapper::toDto)
+            .toList();
+  }
 
-    @GetMapping(ID_PATH)
-    public ResponseEntity<ExposureTypeDto> getExposureTypeById(@PathVariable UUID id) {
-        return exposureTypeService.findById(id)
-                .map(EntryMapper::toDto)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
-    }
+  @GetMapping(ID_PATH)
+  public ResponseEntity<ExposureTypeDto> getExposureTypeById(@PathVariable UUID id) {
+    return exposureTypeService.findById(id)
+            .map(EntryMapper::toDto)
+            .map(ResponseEntity::ok)
+            .orElseGet(() -> ResponseEntity.notFound().build());
+  }
 
-    @PostMapping
-    public ExposureTypeDto createExposureType(@RequestBody ExposureTypeDto exposureTypeDto) {
-        var exposureType = EntryMapper.fromDto(exposureTypeDto);
-        var saved = exposureTypeService.save(exposureType);
-        return EntryMapper.toDto(saved);
-    }
+  @PostMapping
+  public ExposureTypeDto createExposureType(@RequestBody ExposureTypeDto exposureTypeDto) {
+    var exposureType = EntryMapper.fromDto(exposureTypeDto);
+    var saved = exposureTypeService.save(exposureType);
+    return EntryMapper.toDto(saved);
+  }
 }
