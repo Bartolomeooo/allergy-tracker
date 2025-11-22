@@ -15,5 +15,9 @@ jwt:
   access-token-validity-ms: 900000      # 15 minutes
   refresh-token-validity-ms: 604800000  # 7 days
 
+security:
+  password:
+    pepper: ${PASSWORD_PEPPER:default-pepper-change-in-production}
+
 cors:
   allowed-origins: http://localhost:5173,http://localhost:3000
