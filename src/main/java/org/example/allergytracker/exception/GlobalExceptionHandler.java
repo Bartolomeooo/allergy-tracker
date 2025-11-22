@@ -22,7 +22,7 @@ public class GlobalExceptionHandler {
   public ResponseEntity<Map<String, Object>> handleException(ApplicationException e) {
     LOGGER.warn("Application exception occurred: {} - {}", e.getClass().getSimpleName(), e.getMessage());
 
-    Map<String, Object> body = new HashMap<>();
+    var body = new HashMap<String, Object>();
     body.put("timestamp", Instant.now().toString());
     body.put("status", e.getStatus().value());
     body.put("error", e.getStatus().getReasonPhrase());
@@ -35,7 +35,7 @@ public class GlobalExceptionHandler {
   public ResponseEntity<Map<String, Object>> handleException(Exception e) {
     LOGGER.error("Unexpected exception occurred", e);
 
-    Map<String, Object> body = new HashMap<>();
+    var body = new HashMap<String, Object>();
     body.put("timestamp", Instant.now().toString());
     body.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
     body.put("error", HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase());

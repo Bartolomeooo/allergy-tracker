@@ -46,7 +46,7 @@ public class EntryController {
   public EntryDto createEntry(@RequestBody EntryDto entryDto) {
     var userId = getCurrentUserId();
     var exposureTypes = resolveExposureTypes(entryDto.exposures());
-    var entry = EntryMapper.fromDto(entryDto, exposureTypes);
+    var entry = EntryMapper.fromDto(entryDto.withId(null), exposureTypes);
     var saved = entryService.save(entry, userId);
     return EntryMapper.toDto(saved);
   }
@@ -58,7 +58,7 @@ public class EntryController {
       return ResponseEntity.notFound().build();
     }
     var exposureTypes = resolveExposureTypes(entryDto.exposures());
-    var entry = EntryMapper.fromDto(entryDto, exposureTypes);
+    var entry = EntryMapper.fromDto(entryDto.withId(id), exposureTypes);
     var updated = entryService.save(entry, userId);
     return ResponseEntity.ok(EntryMapper.toDto(updated));
   }

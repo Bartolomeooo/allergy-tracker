@@ -30,6 +30,7 @@ public class EntryMapper {
 
     return new EntryDto(
             entry.id(),
+            entry.user().id(),
             occurredOn,
             entry.upperRespiratory().value(),
             entry.lowerRespiratory().value(),
@@ -47,8 +48,8 @@ public class EntryMapper {
             .toLocalDate();
 
     return new Entry(
-            dto.id() != null ? dto.id() : UUID.randomUUID(),
-            null, // User will be set in the service layer
+            dto.id(),
+            null,
             occurredOn,
             new Symptoms(dto.upperRespiratory()),
             new Symptoms(dto.lowerRespiratory()),

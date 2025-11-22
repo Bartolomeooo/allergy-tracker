@@ -62,6 +62,7 @@ class EntryMapperTest {
 
     // Then
     assertEquals(ENTRY_ID, actualDto.id());
+    assertEquals(testUser.id(), actualDto.userId());
     assertEquals(ENTRY_DATE.atStartOfDay(ZoneId.systemDefault()).toInstant(), actualDto.occurredOn());
     assertEquals(UPPER_RESPIRATORY, actualDto.upperRespiratory());
     assertEquals(LOWER_RESPIRATORY, actualDto.lowerRespiratory());
@@ -78,6 +79,7 @@ class EntryMapperTest {
     var occurredOn = ENTRY_DATE.atStartOfDay(ZoneId.systemDefault()).toInstant();
     var dto = new EntryDto(
         ENTRY_ID,
+            testUser.id(),
         occurredOn,
         UPPER_RESPIRATORY,
         LOWER_RESPIRATORY,
@@ -231,6 +233,7 @@ class EntryMapperTest {
     var occurredOn = ENTRY_DATE.atStartOfDay(ZoneId.systemDefault()).toInstant();
     var dto = new EntryDto(
         null, // no ID
+            testUser.id(),
         occurredOn,
         1, 1, 1, 1, 4,
         List.of(),
@@ -241,7 +244,7 @@ class EntryMapperTest {
     var entry = fromDto(dto, List.of());
 
     // Then
-    assertNotNull(entry.id());
+    assertNull(entry.id()); // ID should be null, Hibernate will generate it
   }
 
   @Test
@@ -251,6 +254,7 @@ class EntryMapperTest {
     var occurredOn = ENTRY_DATE.atStartOfDay(ZoneId.systemDefault()).toInstant();
     var dto = new EntryDto(
         customId,
+            testUser.id(),
         occurredOn,
         1, 1, 1, 1, 4,
         List.of(),
@@ -272,6 +276,7 @@ class EntryMapperTest {
 
     var dto = new EntryDto(
         ENTRY_ID,
+            testUser.id(),
         specificInstant,
         1, 1, 1, 1, 4,
         List.of(),

@@ -6,6 +6,7 @@ import java.util.UUID;
 
 public record EntryDto(
         UUID id,
+        UUID userId,
         Instant occurredOn,
         int upperRespiratory,
         int lowerRespiratory,
@@ -15,4 +16,18 @@ public record EntryDto(
         List<String> exposures,
         String note
 ) {
+    public EntryDto withId(UUID newId) {
+        return new EntryDto(
+                newId,
+                this.userId,
+                this.occurredOn,
+                this.upperRespiratory,
+                this.lowerRespiratory,
+                this.skin,
+                this.eyes,
+                this.total,
+                this.exposures,
+                this.note
+        );
+    }
 }
