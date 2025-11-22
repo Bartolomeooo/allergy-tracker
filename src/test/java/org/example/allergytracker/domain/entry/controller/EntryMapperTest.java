@@ -1,9 +1,11 @@
 package org.example.allergytracker.domain.entry.controller;
 
-import org.example.allergytracker.domain.entry.model.ExposureType;
 import org.example.allergytracker.domain.entry.model.Entry;
+import org.example.allergytracker.domain.entry.model.ExposureType;
 import org.example.allergytracker.domain.entry.model.Note;
 import org.example.allergytracker.domain.entry.model.Symptoms;
+import org.example.allergytracker.domain.user.model.User;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
@@ -28,23 +30,35 @@ class EntryMapperTest {
   private static final ExposureType EXPOSURE_1 = new ExposureType(UUID.randomUUID(), "Cat", "Cat allergen");
   private static final ExposureType EXPOSURE_2 = new ExposureType(UUID.randomUUID(), "Dust", "Dust allergen");
 
-  private static final Entry TEST_ENTRY = new Entry(
-      ENTRY_ID,
-      ENTRY_DATE,
-      new Symptoms(UPPER_RESPIRATORY),
-      new Symptoms(LOWER_RESPIRATORY),
-      new Symptoms(SKIN),
-      new Symptoms(EYES),
-      new Note(NOTE_TEXT),
-      Instant.now(),
-      Instant.now(),
-      List.of(EXPOSURE_1, EXPOSURE_2)
-  );
+  private User testUser;
+  private Entry testEntry;
+
+  @BeforeEach
+  void setUp() {
+    testUser = new User();
+    testUser.id(UUID.randomUUID());
+    testUser.email("test@example.com");
+    testUser.password("encodedPassword");
+
+    testEntry = new Entry(
+            ENTRY_ID,
+            testUser,
+            ENTRY_DATE,
+            new Symptoms(UPPER_RESPIRATORY),
+            new Symptoms(LOWER_RESPIRATORY),
+            new Symptoms(SKIN),
+            new Symptoms(EYES),
+            new Note(NOTE_TEXT),
+            Instant.now(),
+            Instant.now(),
+            List.of(EXPOSURE_1, EXPOSURE_2)
+    );
+  }
 
   @Test
   void shouldMapToDtoCorrectly() {
     // When
-    var actualDto = toDto(TEST_ENTRY);
+    var actualDto = toDto(testEntry);
 
     // Then
     assertEquals(ENTRY_ID, actualDto.id());
@@ -119,6 +133,7 @@ class EntryMapperTest {
     // Given
     var entryWithNullNote = new Entry(
         ENTRY_ID,
+            testUser,
         ENTRY_DATE,
         new Symptoms(UPPER_RESPIRATORY),
         new Symptoms(LOWER_RESPIRATORY),
@@ -142,6 +157,7 @@ class EntryMapperTest {
     // Given - all zeros
     var entryAllZeros = new Entry(
         ENTRY_ID,
+            testUser,
         ENTRY_DATE,
         new Symptoms(0),
         new Symptoms(0),
@@ -165,6 +181,7 @@ class EntryMapperTest {
     // Given - max values (assuming max is 10 per symptom)
     var entryMaxValues = new Entry(
         ENTRY_ID,
+            testUser,
         ENTRY_DATE,
         new Symptoms(10),
         new Symptoms(10),
@@ -188,6 +205,7 @@ class EntryMapperTest {
     // Given
     var entryNoExposures = new Entry(
         ENTRY_ID,
+            testUser,
         ENTRY_DATE,
         new Symptoms(1),
         new Symptoms(1),
@@ -276,6 +294,7 @@ class EntryMapperTest {
 
     var entry = new Entry(
         ENTRY_ID,
+            testUser,
         ENTRY_DATE,
         new Symptoms(1),
         new Symptoms(1),

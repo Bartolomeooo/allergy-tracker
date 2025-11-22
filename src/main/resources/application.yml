@@ -9,3 +9,15 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+
+jwt:
+  secret: ${JWT_SECRET:my-secret-key-for-jwt-tokens-must-be-at-least-256-bits-long-for-production-use}
+  access-token-validity-ms: 900000      # 15 minutes
+  refresh-token-validity-ms: 604800000  # 7 days
+
+security:
+  password:
+    pepper: ${PASSWORD_PEPPER:default-pepper-change-in-production}
+
+cors:
+  allowed-origins: http://localhost:5173,http://localhost:3000

@@ -1,0 +1,21 @@
+package org.example.allergytracker.security;
+
+import org.example.allergytracker.exception.auth.UnauthenticatedException;
+import org.springframework.security.core.context.SecurityContextHolder;
+
+import java.util.UUID;
+
+public class AuthenticationProvider {
+
+    private AuthenticationProvider() {
+        throw new UnsupportedOperationException("Utility class");
+    }
+
+    public static UUID getCurrentUserId() {
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !(authentication.getPrincipal() instanceof UUID)) {
+            throw new UnauthenticatedException("No authenticated user found");
+        }
+        return (UUID) authentication.getPrincipal();
+    }
+}

@@ -3,7 +3,11 @@ package org.example.allergytracker.domain.entry.service;
 import lombok.RequiredArgsConstructor;
 import org.example.allergytracker.domain.entry.model.Entry;
 import org.example.allergytracker.domain.entry.repository.EntryRepository;
+import org.example.allergytracker.domain.user.repository.UserRepository;
+import org.example.allergytracker.exception.auth.UserNotFoundException;
+import org.example.allergytracker.exception.entry.EntryNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,20 +18,30 @@ import java.util.UUID;
 public class EntryService {
 
   private final EntryRepository entryRepository;
+  private final UserRepository userRepository;
 
-  public List<Entry> findAll() {
-    return entryRepository.findAll();
+  public List<Entry> findAllByUserId(UUID userId) {
+    return entryRepository.findByUserId(userId);
   }
 
-  public Optional<Entry> findById(UUID id) {
-    return entryRepository.findById(id);
+  public Optional<Entry> findByIdAndUserId(UUID id, UUID userId) {
+    return entryRepository.findByIdAndUserId(id, userId);
   }
 
-  public Entry save(Entry entry) {
+  @Transactional
+  public Entry save(Entry entry, UUID userId) {
+    var user = userRepository.findById(userId)
+            .orElseThrow(() -> new UserNotFoundException(userId));
+
+    entry.user(user);
     return entryRepository.save(entry);
   }
 
-  public void deleteById(UUID id) {
-    entryRepository.deleteById(id);
+  @Transactional
+  public void deleteByIdAndUserId(UUID id, UUID userId) {
+    if (entryRepository.findByIdAndUserId(id, userId).isEmpty()) {
+      throw new EntryNotFoundException(id);
+    }
+    entryRepository.deleteByIdAndUserId(id, userId);
   }
 }
