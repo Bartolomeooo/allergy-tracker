@@ -10,12 +10,14 @@ import org.example.allergytracker.domain.auth.dto.UserResponse;
 import org.example.allergytracker.domain.auth.validator.EmailValidator;
 import org.example.allergytracker.domain.user.model.User;
 import org.example.allergytracker.domain.user.repository.UserRepository;
+import org.example.allergytracker.exception.auth.EmailAlreadyInUseException;
+import org.example.allergytracker.exception.auth.InvalidCredentialsException;
+import org.example.allergytracker.exception.auth.InvalidRefreshTokenException;
+import org.example.allergytracker.exception.auth.UserNotFoundException;
 import org.example.allergytracker.security.JwtTokenProvider;
 import org.example.allergytracker.security.cookie.CookieManager;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.UUID;
 
@@ -24,7 +26,7 @@ import java.util.UUID;
 public class AuthService {
 
     private static final String REFRESH_TOKEN_COOKIE = "refreshToken";
-    private static final int REFRESH_TOKEN_MAX_AGE = 7 * 24 * 60 * 60; // 7 days
+    private static final int REFRESH_TOKEN_MAX_AGE = 7 * 24 * 60 * 60; // 7 days in seconds
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -36,7 +38,7 @@ public class AuthService {
         var email = emailValidator.normalize(request.email());
 
         if (userRepository.findByEmail(email).isPresent()) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Email already in use");
+            throw new EmailAlreadyInUseException(email);
         }
 
         var user = new User();
@@ -58,10 +60,10 @@ public class AuthService {
         var email = emailValidator.normalize(request.email());
 
         var user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials"));
+                .orElseThrow(InvalidCredentialsException::new);
 
         if (!passwordEncoder.matches(request.password(), user.password())) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials");
+            throw new InvalidCredentialsException();
         }
 
         var accessToken = jwtTokenProvider.generateAccessToken(user.id());
@@ -74,15 +76,15 @@ public class AuthService {
 
     public AuthResponse refresh(HttpServletRequest request, HttpServletResponse response) {
         var refreshToken = cookieManager.getCookie(request, REFRESH_TOKEN_COOKIE)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid refresh token"));
+                .orElseThrow(InvalidRefreshTokenException::new);
 
         if (!jwtTokenProvider.validateToken(refreshToken)) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid refresh token");
+            throw new InvalidRefreshTokenException();
         }
 
         var userId = jwtTokenProvider.getUserIdFromToken(refreshToken);
         var user = userRepository.findById(userId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found"));
+                .orElseThrow(() -> new UserNotFoundException(userId));
 
         var newAccessToken = jwtTokenProvider.generateAccessToken(user.id());
         var newRefreshToken = jwtTokenProvider.generateRefreshToken(user.id());

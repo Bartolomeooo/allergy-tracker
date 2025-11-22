@@ -3,12 +3,11 @@ package org.example.allergytracker.domain.entry.service;
 import lombok.RequiredArgsConstructor;
 import org.example.allergytracker.domain.entry.model.Entry;
 import org.example.allergytracker.domain.entry.repository.EntryRepository;
-import org.example.allergytracker.domain.user.model.User;
 import org.example.allergytracker.domain.user.repository.UserRepository;
-import org.springframework.http.HttpStatus;
+import org.example.allergytracker.exception.auth.UserNotFoundException;
+import org.example.allergytracker.exception.entry.EntryNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -31,8 +30,8 @@ public class EntryService {
 
   @Transactional
   public Entry save(Entry entry, UUID userId) {
-    User user = userRepository.findById(userId)
-            .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found"));
+    var user = userRepository.findById(userId)
+            .orElseThrow(() -> new UserNotFoundException(userId));
 
     entry.user(user);
     return entryRepository.save(entry);
@@ -41,7 +40,7 @@ public class EntryService {
   @Transactional
   public void deleteByIdAndUserId(UUID id, UUID userId) {
     if (entryRepository.findByIdAndUserId(id, userId).isEmpty()) {
-      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Entry not found");
+      throw new EntryNotFoundException(id);
     }
     entryRepository.deleteByIdAndUserId(id, userId);
   }
