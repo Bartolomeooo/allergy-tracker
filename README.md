@@ -1,4 +1,5 @@
-# <img src="https://github.com/user-attachments/assets/214cb4fb-5817-41f8-832c-048bd61d9c78" width="64" /> Allergy Tracker
+# <img src="https://github.com/user-attachments/assets/f1e92f06-aa34-49ad-b68f-807866a830a3" width="64" /> Allergy Tracker
+
 A full-stack web application for tracking and managing allergy exposures. Monitor your allergy symptoms, record exposure incidents, and analyze patterns over time to better understand and manage your allergies.
 
 ## How to Run
