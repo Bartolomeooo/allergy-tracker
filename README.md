@@ -101,9 +101,3 @@ npm test
 - MSW (Mock Service Worker)
 - Vitest
 - ESLint & Prettier
-
-## Authors
-
-<a href="https://github.com/Bartolomeooo/allergy-tracker">
-  <img src="https://contrib.rocks/image?repo=Bartolomeooo/allergy-tracker" alt="Authors" />
-</a>
