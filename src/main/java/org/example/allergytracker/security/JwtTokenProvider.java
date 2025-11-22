@@ -1,0 +1,72 @@
+package org.example.allergytracker.security;
+
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+import javax.crypto.SecretKey;
+import java.nio.charset.StandardCharsets;
+import java.util.Date;
+import java.util.UUID;
+
+@Component
+public class JwtTokenProvider {
+
+  private final SecretKey secretKey;
+  private final long accessTokenValidityMs;
+  private final long refreshTokenValidityMs;
+
+  public JwtTokenProvider(
+          @Value("${jwt.secret:my-secret-key-for-jwt-tokens-must-be-at-least-256-bits-long}") String secret,
+          @Value("${jwt.access-token-validity-ms:900000}") long accessTokenValidityMs,
+          @Value("${jwt.refresh-token-validity-ms:604800000}") long refreshTokenValidityMs
+  ) {
+    this.secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+    this.accessTokenValidityMs = accessTokenValidityMs;
+    this.refreshTokenValidityMs = refreshTokenValidityMs;
+  }
+
+  public String generateAccessToken(UUID userId) {
+    return generateToken(userId, accessTokenValidityMs);
+  }
+
+  public String generateRefreshToken(UUID userId) {
+    return generateToken(userId, refreshTokenValidityMs);
+  }
+
+  private String generateToken(UUID userId, long validityMs) {
+    var now = new Date();
+    var expiryDate = new Date(now.getTime() + validityMs);
+
+    return Jwts.builder()
+            .subject(userId.toString())
+            .issuedAt(now)
+            .expiration(expiryDate)
+            .signWith(secretKey)
+            .compact();
+  }
+
+  public UUID getUserIdFromToken(String token) {
+    var claims = Jwts.parser()
+            .verifyWith(secretKey)
+            .build()
+            .parseSignedClaims(token)
+            .getPayload();
+
+    return UUID.fromString(claims.getSubject());
+  }
+
+  public boolean validateToken(String token) {
+    try {
+      Jwts.parser()
+              .verifyWith(secretKey)
+              .build()
+              .parseSignedClaims(token);
+      return true;
+    } catch (Exception e) {
+      return false;
+    }
+  }
+}

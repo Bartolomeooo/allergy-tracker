@@ -3,6 +3,7 @@ package org.example.allergytracker.domain.entry.model;
 import lombok.*;
 import lombok.experimental.Accessors;
 import jakarta.persistence.*;
+import org.example.allergytracker.domain.user.model.User;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -12,6 +13,7 @@ import java.util.UUID;
 @Entity
 @Table(name = Entry.TABLE_NAME)
 @Getter
+@Setter
 @Accessors(fluent = true)
 @AllArgsConstructor
 @NoArgsConstructor
@@ -31,6 +33,10 @@ public class Entry {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   UUID id;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "user_id", nullable = false)
+  private User user;
 
   LocalDate occurredOn;
 

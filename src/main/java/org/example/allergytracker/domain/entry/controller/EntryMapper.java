@@ -48,6 +48,7 @@ public class EntryMapper {
 
     return new Entry(
             dto.id() != null ? dto.id() : UUID.randomUUID(),
+            null, // User will be set in the service layer
             occurredOn,
             new Symptoms(dto.upperRespiratory()),
             new Symptoms(dto.lowerRespiratory()),
