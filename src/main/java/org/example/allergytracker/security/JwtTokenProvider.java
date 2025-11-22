@@ -32,20 +32,21 @@ public class JwtTokenProvider {
     this.refreshTokenValidityMs = refreshTokenValidityMs;
   }
 
-  public String generateAccessToken(UUID userId) {
-    return generateToken(userId, accessTokenValidityMs);
+  public String generateAccessToken(UUID userId, String email) {
+    return generateToken(userId, email, accessTokenValidityMs);
   }
 
-  public String generateRefreshToken(UUID userId) {
-    return generateToken(userId, refreshTokenValidityMs);
+  public String generateRefreshToken(UUID userId, String email) {
+    return generateToken(userId, email, refreshTokenValidityMs);
   }
 
-  private String generateToken(UUID userId, long validityMs) {
+  private String generateToken(UUID userId, String email, long validityMs) {
     var now = new Date();
     var expiryDate = new Date(now.getTime() + validityMs);
 
     return Jwts.builder()
             .subject(userId.toString())
+            .claim("email", email)
             .issuedAt(now)
             .expiration(expiryDate)
             .signWith(secretKey)
@@ -60,6 +61,16 @@ public class JwtTokenProvider {
             .getPayload();
 
     return UUID.fromString(claims.getSubject());
+  }
+
+  public String getEmailFromToken(String token) {
+    var claims = Jwts.parser()
+            .verifyWith(secretKey)
+            .build()
+            .parseSignedClaims(token)
+            .getPayload();
+
+    return claims.get("email", String.class);
   }
 
   public boolean validateToken(String token) {

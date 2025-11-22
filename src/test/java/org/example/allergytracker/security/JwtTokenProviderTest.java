@@ -14,6 +14,7 @@ class JwtTokenProviderTest {
   private static final long ACCESS_TOKEN_VALIDITY_MS = 900000; // 15 minutes
   private static final long REFRESH_TOKEN_VALIDITY_MS = 604800000; // 7 days
   private static final UUID TEST_USER_ID = UUID.randomUUID();
+  private static final String TEST_EMAIL = "test@example.com";
 
   @BeforeEach
   void setUp() {
@@ -23,7 +24,7 @@ class JwtTokenProviderTest {
   @Test
   void generateAccessToken_ShouldReturnValidToken() {
     // When
-    var token = jwtTokenProvider.generateAccessToken(TEST_USER_ID);
+    var token = jwtTokenProvider.generateAccessToken(TEST_USER_ID, TEST_EMAIL);
 
     // Then
     assertNotNull(token);
@@ -33,7 +34,7 @@ class JwtTokenProviderTest {
   @Test
   void generateRefreshToken_ShouldReturnValidToken() {
     // When
-    var token = jwtTokenProvider.generateRefreshToken(TEST_USER_ID);
+    var token = jwtTokenProvider.generateRefreshToken(TEST_USER_ID, TEST_EMAIL);
 
     // Then
     assertNotNull(token);
@@ -43,7 +44,7 @@ class JwtTokenProviderTest {
   @Test
   void validateToken_WithValidToken_ShouldReturnTrue() {
     // Given
-    var token = jwtTokenProvider.generateAccessToken(TEST_USER_ID);
+    var token = jwtTokenProvider.generateAccessToken(TEST_USER_ID, TEST_EMAIL);
 
     // When
     var isValid = jwtTokenProvider.validateToken(token);
@@ -76,7 +77,7 @@ class JwtTokenProviderTest {
   @Test
   void getUserIdFromToken_ShouldReturnCorrectUserId() {
     // Given
-    var token = jwtTokenProvider.generateAccessToken(TEST_USER_ID);
+    var token = jwtTokenProvider.generateAccessToken(TEST_USER_ID, TEST_EMAIL);
 
     // When
     var userId = jwtTokenProvider.getUserIdFromToken(token);
@@ -86,12 +87,24 @@ class JwtTokenProviderTest {
   }
 
   @Test
+  void getEmailFromToken_ShouldReturnCorrectEmail() {
+    // Given
+    var token = jwtTokenProvider.generateAccessToken(TEST_USER_ID, TEST_EMAIL);
+
+    // When
+    var email = jwtTokenProvider.getEmailFromToken(token);
+
+    // Then
+    assertEquals(TEST_EMAIL, email);
+  }
+
+  @Test
   void getUserIdFromToken_WithDifferentUserIds_ShouldReturnCorrectUserIds() {
     // Given
     var userId1 = UUID.randomUUID();
     var userId2 = UUID.randomUUID();
-    var token1 = jwtTokenProvider.generateAccessToken(userId1);
-    var token2 = jwtTokenProvider.generateAccessToken(userId2);
+    var token1 = jwtTokenProvider.generateAccessToken(userId1, "user1@example.com");
+    var token2 = jwtTokenProvider.generateAccessToken(userId2, "user2@example.com");
 
     // When
     var extractedUserId1 = jwtTokenProvider.getUserIdFromToken(token1);
@@ -106,7 +119,7 @@ class JwtTokenProviderTest {
   @Test
   void generateAccessToken_WithDifferentSecret_ShouldNotValidate() {
     // Given
-    var token = jwtTokenProvider.generateAccessToken(TEST_USER_ID);
+    var token = jwtTokenProvider.generateAccessToken(TEST_USER_ID, TEST_EMAIL);
     var differentProvider = new JwtTokenProvider(
             "different-secret-key-must-be-at-least-256-bits-long-for-testing-purposes",
             ACCESS_TOKEN_VALIDITY_MS,
@@ -123,8 +136,8 @@ class JwtTokenProviderTest {
   @Test
   void generateAccessToken_AndRefreshToken_ShouldBeDifferent() {
     // When
-    var accessToken = jwtTokenProvider.generateAccessToken(TEST_USER_ID);
-    var refreshToken = jwtTokenProvider.generateRefreshToken(TEST_USER_ID);
+    var accessToken = jwtTokenProvider.generateAccessToken(TEST_USER_ID, TEST_EMAIL);
+    var refreshToken = jwtTokenProvider.generateRefreshToken(TEST_USER_ID, TEST_EMAIL);
 
     // Then
     assertNotEquals(accessToken, refreshToken);
@@ -133,8 +146,8 @@ class JwtTokenProviderTest {
   @Test
   void validateToken_BothAccessAndRefreshTokens_ShouldBeValid() {
     // Given
-    var accessToken = jwtTokenProvider.generateAccessToken(TEST_USER_ID);
-    var refreshToken = jwtTokenProvider.generateRefreshToken(TEST_USER_ID);
+    var accessToken = jwtTokenProvider.generateAccessToken(TEST_USER_ID, TEST_EMAIL);
+    var refreshToken = jwtTokenProvider.generateRefreshToken(TEST_USER_ID, TEST_EMAIL);
 
     // When & Then
     assertTrue(jwtTokenProvider.validateToken(accessToken));
@@ -144,7 +157,7 @@ class JwtTokenProviderTest {
   @Test
   void getUserIdFromToken_FromRefreshToken_ShouldReturnCorrectUserId() {
     // Given
-    var refreshToken = jwtTokenProvider.generateRefreshToken(TEST_USER_ID);
+    var refreshToken = jwtTokenProvider.generateRefreshToken(TEST_USER_ID, TEST_EMAIL);
 
     // When
     var userId = jwtTokenProvider.getUserIdFromToken(refreshToken);

@@ -73,8 +73,8 @@ class AuthServiceTest {
     var registerRequest = new RegisterRequest(TEST_EMAIL, TEST_PASSWORD);
     when(userRepository.findByEmail(TEST_EMAIL)).thenReturn(Optional.empty());
     when(passwordEncoder.encode(TEST_PASSWORD)).thenReturn(ENCODED_PASSWORD);
-    when(jwtTokenProvider.generateAccessToken(any(UUID.class))).thenReturn(ACCESS_TOKEN);
-    when(jwtTokenProvider.generateRefreshToken(any(UUID.class))).thenReturn(REFRESH_TOKEN);
+    when(jwtTokenProvider.generateAccessToken(any(UUID.class), anyString())).thenReturn(ACCESS_TOKEN);
+    when(jwtTokenProvider.generateRefreshToken(any(UUID.class), anyString())).thenReturn(REFRESH_TOKEN);
     when(userRepository.save(any(User.class))).thenAnswer(i -> i.getArgument(0));
 
     // When
@@ -112,8 +112,8 @@ class AuthServiceTest {
 
     when(userRepository.findByEmail(TEST_EMAIL)).thenReturn(Optional.of(user));
     when(passwordEncoder.matches(TEST_PASSWORD, ENCODED_PASSWORD)).thenReturn(true);
-    when(jwtTokenProvider.generateAccessToken(USER_ID)).thenReturn(ACCESS_TOKEN);
-    when(jwtTokenProvider.generateRefreshToken(USER_ID)).thenReturn(REFRESH_TOKEN);
+    when(jwtTokenProvider.generateAccessToken(USER_ID, TEST_EMAIL)).thenReturn(ACCESS_TOKEN);
+    when(jwtTokenProvider.generateRefreshToken(USER_ID, TEST_EMAIL)).thenReturn(REFRESH_TOKEN);
 
     // When
     var result = authService.login(loginRequest, response);
@@ -166,8 +166,8 @@ class AuthServiceTest {
     when(jwtTokenProvider.validateToken(REFRESH_TOKEN)).thenReturn(true);
     when(jwtTokenProvider.getUserIdFromToken(REFRESH_TOKEN)).thenReturn(USER_ID);
     when(userRepository.findById(USER_ID)).thenReturn(Optional.of(user));
-    when(jwtTokenProvider.generateAccessToken(USER_ID)).thenReturn(ACCESS_TOKEN);
-    when(jwtTokenProvider.generateRefreshToken(USER_ID)).thenReturn(REFRESH_TOKEN);
+    when(jwtTokenProvider.generateAccessToken(USER_ID, TEST_EMAIL)).thenReturn(ACCESS_TOKEN);
+    when(jwtTokenProvider.generateRefreshToken(USER_ID, TEST_EMAIL)).thenReturn(REFRESH_TOKEN);
 
     // When
     var result = authService.refresh(request, response);

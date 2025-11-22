@@ -54,8 +54,8 @@ public class AuthService {
         userRepository.save(user);
         LOGGER.info("New user registered: {}", email);
 
-        var accessToken = jwtTokenProvider.generateAccessToken(user.id());
-        var refreshToken = jwtTokenProvider.generateRefreshToken(user.id());
+        var accessToken = jwtTokenProvider.generateAccessToken(user.id(), user.email());
+        var refreshToken = jwtTokenProvider.generateRefreshToken(user.id(), user.email());
 
         cookieManager.setCookie(response, REFRESH_TOKEN_COOKIE, refreshToken, REFRESH_TOKEN_MAX_AGE);
 
@@ -78,8 +78,8 @@ public class AuthService {
 
         LOGGER.info("User logged in: {}", email);
 
-        var accessToken = jwtTokenProvider.generateAccessToken(user.id());
-        var refreshToken = jwtTokenProvider.generateRefreshToken(user.id());
+        var accessToken = jwtTokenProvider.generateAccessToken(user.id(), user.email());
+        var refreshToken = jwtTokenProvider.generateRefreshToken(user.id(), user.email());
 
         cookieManager.setCookie(response, REFRESH_TOKEN_COOKIE, refreshToken, REFRESH_TOKEN_MAX_AGE);
 
@@ -104,8 +104,8 @@ public class AuthService {
 
         LOGGER.debug("Token refreshed for user: {}", userId);
 
-        var newAccessToken = jwtTokenProvider.generateAccessToken(user.id());
-        var newRefreshToken = jwtTokenProvider.generateRefreshToken(user.id());
+        var newAccessToken = jwtTokenProvider.generateAccessToken(user.id(), user.email());
+        var newRefreshToken = jwtTokenProvider.generateRefreshToken(user.id(), user.email());
 
         cookieManager.setCookie(response, REFRESH_TOKEN_COOKIE, newRefreshToken, REFRESH_TOKEN_MAX_AGE);
 

@@ -2,6 +2,7 @@ import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
 import {useState} from 'react';
 import {isAxiosError} from 'axios';
 import {useNavigate} from 'react-router-dom';
+import {jwtDecode} from 'jwt-decode';
 import {api, tokenStore} from '../api/client';
 import type {LoginResponse} from '../types/auth/loginResponse';
 import type {RegisterResponse} from '../types/auth/registerResponse';
@@ -10,9 +11,31 @@ import {PATHS} from '../router/paths';
 
 type ApiError = {message?: string; code?: string};
 
-export async function fetchMe(): Promise<MeResponse> {
-  const {data} = await api.get<MeResponse>('/me');
-  return data;
+type JwtPayload = {
+  sub: string;
+  email: string;
+  iat: number;
+  exp: number;
+};
+
+function decodeToken(token: string): MeResponse | null {
+  try {
+    const decoded = jwtDecode<JwtPayload>(token);
+    return {
+      user: {
+        id: decoded.sub,
+        email: decoded.email,
+      },
+    };
+  } catch {
+    return null;
+  }
+}
+
+export function fetchMe(): MeResponse | null {
+  const token = tokenStore.get();
+  if (!token) return null;
+  return decodeToken(token);
 }
 
 export function useMe() {
@@ -40,10 +63,9 @@ export function useLogin() {
     onMutate: () => {
       setErrorMessage(null);
     },
-    onSuccess: async (data) => {
+    onSuccess: (data) => {
       tokenStore.set(data.accessToken);
-      qc.removeQueries({queryKey: ['me']});
-      await qc.fetchQuery({queryKey: ['me'], queryFn: fetchMe});
+      qc.setQueryData(['me'], decodeToken(data.accessToken));
       void nav(PATHS.journal, {replace: true});
     },
     onError: (err) => {
@@ -70,10 +92,9 @@ export function useRegister() {
     onMutate: () => {
       setErrorMessage(null);
     },
-    onSuccess: async (data) => {
+    onSuccess: (data) => {
       tokenStore.set(data.accessToken);
-      qc.removeQueries({queryKey: ['me']});
-      await qc.fetchQuery({queryKey: ['me'], queryFn: fetchMe});
+      qc.setQueryData(['me'], decodeToken(data.accessToken));
       void nav(PATHS.journal, {replace: true});
     },
     onError: (err) => {
