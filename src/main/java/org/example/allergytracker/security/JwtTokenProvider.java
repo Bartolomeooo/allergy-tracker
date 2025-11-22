@@ -1,8 +1,8 @@
 package org.example.allergytracker.security;
 
-import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -11,8 +11,12 @@ import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.UUID;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 @Component
 public class JwtTokenProvider {
+
+  private static final Logger LOGGER = getLogger(JwtTokenProvider.class);
 
   private final SecretKey secretKey;
   private final long accessTokenValidityMs;
@@ -66,6 +70,7 @@ public class JwtTokenProvider {
               .parseSignedClaims(token);
       return true;
     } catch (Exception e) {
+      LOGGER.debug("Invalid JWT token: {}", e.getMessage());
       return false;
     }
   }
