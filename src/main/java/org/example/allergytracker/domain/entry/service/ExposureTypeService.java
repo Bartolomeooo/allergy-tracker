@@ -13,29 +13,29 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ExposureTypeService {
 
-    private final ExposureTypeRepository exposureTypeRepository;
+  private final ExposureTypeRepository exposureTypeRepository;
 
-    public List<ExposureType> findAll() {
-        return exposureTypeRepository.findAll();
-    }
+  public List<ExposureType> findAll() {
+    return exposureTypeRepository.findAll();
+  }
 
-    public Optional<ExposureType> findById(UUID id) {
-        return exposureTypeRepository.findById(id);
-    }
+  public Optional<ExposureType> findById(UUID id) {
+    return exposureTypeRepository.findById(id);
+  }
 
-    public Optional<ExposureType> findByValue(String value) {
-        return exposureTypeRepository.findByValue(value);
-    }
+  public Optional<ExposureType> findByValue(String value) {
+    return exposureTypeRepository.findByValue(value);
+  }
 
-    public ExposureType save(ExposureType exposureType) {
-        return exposureTypeRepository.save(exposureType);
-    }
+  public ExposureType save(ExposureType exposureType) {
+    return exposureTypeRepository.save(exposureType);
+  }
 
-    public void deleteById(UUID id) {
-        exposureTypeRepository.deleteById(id);
-    }
+  public void deleteById(UUID id) {
+    exposureTypeRepository.deleteById(id);
+  }
 
-    public boolean existsById(UUID id) {
-        return exposureTypeRepository.existsById(id);
-    }
+  public boolean existsById(UUID id) {
+    return exposureTypeRepository.existsById(id);
+  }
 }

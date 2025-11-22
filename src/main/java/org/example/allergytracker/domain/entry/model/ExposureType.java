@@ -10,8 +10,8 @@ import java.util.UUID;
 
 @Entity
 @Table(
-    name = ExposureType.TABLE_NAME,
-    uniqueConstraints = @UniqueConstraint(columnNames = ExposureType.VALUE_COLUMN_NAME)
+        name = ExposureType.TABLE_NAME,
+        uniqueConstraints = @UniqueConstraint(columnNames = ExposureType.VALUE_COLUMN_NAME)
 )
 @Getter
 @Accessors(fluent = true)
@@ -19,18 +19,18 @@ import java.util.UUID;
 @AllArgsConstructor
 public class ExposureType {
 
-    static final String TABLE_NAME = "exposure_types";
-    static final String VALUE_COLUMN_NAME = "value";
-    private static final String DESCRIPTION_COLUMN_NAME = "description";
-    private static final String ID_COLUMN_NAME = "id";
+  static final String TABLE_NAME = "exposure_types";
+  static final String VALUE_COLUMN_NAME = "value";
+  private static final String DESCRIPTION_COLUMN_NAME = "description";
+  private static final String ID_COLUMN_NAME = "id";
 
-    @Id
-    @Column(name = ID_COLUMN_NAME, nullable = false, updatable = false)
-    private UUID id;
+  @Id
+  @Column(name = ID_COLUMN_NAME, nullable = false, updatable = false)
+  private UUID id;
 
-    @Column(name = VALUE_COLUMN_NAME, nullable = false)
-    private String value;
+  @Column(name = VALUE_COLUMN_NAME, nullable = false)
+  private String value;
 
-    @Column(name = DESCRIPTION_COLUMN_NAME)
-    private String description;
+  @Column(name = DESCRIPTION_COLUMN_NAME)
+  private String description;
 }
