@@ -1,7 +1,6 @@
 import {Link} from 'react-router-dom';
 import {PATHS} from '../../router/paths.ts';
 import {Box, Stack, Typography} from '@mui/material';
-import HealingOutlinedIcon from '@mui/icons-material/HealingOutlined';
 
 export default function NavbarLogoSection() {
   return (
@@ -24,7 +23,11 @@ export default function NavbarLogoSection() {
           color: 'primary.main',
         }}
       >
-        <HealingOutlinedIcon />
+          <img
+              src="/allergy.png"
+              alt="Allergy Tracker Logo"
+              style={{width: '32px', height: '32px'}}
+          />
       </Box>
       <Typography variant="h3" fontWeight={700}>
         Allergy Tracker
