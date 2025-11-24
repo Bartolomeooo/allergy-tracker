@@ -10,6 +10,7 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.util.List;
 import java.util.UUID;
+import java.util.Optional;
 
 @Component
 public class EntryMapper {
@@ -28,6 +29,10 @@ public class EntryMapper {
             .atStartOfDay(ZoneId.systemDefault())
             .toInstant();
 
+    var note = Optional.ofNullable(entry.note())
+            .flatMap(Note::value)
+            .orElse(null);
+
     return new EntryDto(
             entry.id(),
             entry.user().id(),
@@ -38,7 +43,7 @@ public class EntryMapper {
             entry.eyes().value(),
             total,
             exposures,
-            entry.note().value()
+            note
     );
   }
 
