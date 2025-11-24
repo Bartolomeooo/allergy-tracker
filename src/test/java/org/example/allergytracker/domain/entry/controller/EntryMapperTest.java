@@ -101,7 +101,7 @@ class EntryMapperTest {
     assertEquals(LOWER_RESPIRATORY, actualEntry.lowerRespiratory().value());
     assertEquals(SKIN, actualEntry.skin().value());
     assertEquals(EYES, actualEntry.eyes().value());
-    assertEquals(NOTE_TEXT, actualEntry.note().value());
+    assertEquals(NOTE_TEXT, actualEntry.note().value().orElse(null));
     assertEquals(exposureTypes, actualEntry.exposureTypes());
   }
 
