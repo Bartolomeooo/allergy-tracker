@@ -7,7 +7,6 @@ import org.example.allergytracker.domain.entry.model.Symptoms;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
-import java.time.ZoneId;
 import java.util.List;
 import java.util.UUID;
 
@@ -24,14 +23,10 @@ public class EntryMapper {
             .map(ExposureType::value)
             .toList();
 
-    var occurredOn = entry.occurredOn()
-            .atStartOfDay(ZoneId.systemDefault())
-            .toInstant();
-
     return new EntryDto(
             entry.id(),
             entry.user().id(),
-            occurredOn,
+            entry.occurredOn(),
             entry.upperRespiratory().value(),
             entry.lowerRespiratory().value(),
             entry.skin().value(),
@@ -43,14 +38,10 @@ public class EntryMapper {
   }
 
   public static Entry fromDto(EntryDto dto, List<ExposureType> exposureTypes) {
-    var occurredOn = dto.occurredOn()
-            .atZone(ZoneId.systemDefault())
-            .toLocalDate();
-
     return new Entry(
             dto.id(),
             null,
-            occurredOn,
+            dto.occurredOn(),
             new Symptoms(dto.upperRespiratory()),
             new Symptoms(dto.lowerRespiratory()),
             new Symptoms(dto.skin()),

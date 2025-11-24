@@ -9,7 +9,6 @@ import lombok.experimental.Accessors;
 import org.example.allergytracker.domain.user.model.User;
 
 import java.time.Instant;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -42,7 +41,7 @@ public class Entry {
   @JoinColumn(name = "user_id", nullable = false)
   private User user;
 
-  LocalDate occurredOn;
+  Instant occurredOn;
 
   @Embedded
   @AttributeOverride(name = "value", column = @Column(name = UPPER_RESPIRATORY_COL))

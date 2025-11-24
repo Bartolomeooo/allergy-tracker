@@ -16,7 +16,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.Instant;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -43,6 +42,8 @@ class EntryServiceTest {
     private UUID entryId;
     private UUID userId;
 
+    private static final Instant OCCURRED_ON = Instant.parse("2025-11-04T10:15:30Z");
+
     @BeforeEach
     void setUp() {
         entryId = UUID.randomUUID();
@@ -56,7 +57,7 @@ class EntryServiceTest {
         testEntry = new Entry(
                 entryId,
                 testUser,
-                LocalDate.of(2025, 11, 4),
+                OCCURRED_ON,
                 new Symptoms(2),
                 new Symptoms(3),
                 new Symptoms(1),
@@ -116,7 +117,7 @@ class EntryServiceTest {
         // Given
         Entry entryToSave = new Entry();
         entryToSave.id(UUID.randomUUID());
-        entryToSave.occurredOn(LocalDate.of(2025, 11, 4));
+        entryToSave.occurredOn(OCCURRED_ON);
         entryToSave.upperRespiratory(new Symptoms(2));
         entryToSave.lowerRespiratory(new Symptoms(3));
         entryToSave.skin(new Symptoms(1));
@@ -199,7 +200,7 @@ class EntryServiceTest {
         Entry entry2 = new Entry(
                 UUID.randomUUID(),
                 testUser,
-                LocalDate.of(2025, 11, 5),
+                Instant.parse("2025-11-05T12:00:00Z"),
                 new Symptoms(1),
                 new Symptoms(1),
                 new Symptoms(1),
