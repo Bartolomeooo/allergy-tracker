@@ -112,9 +112,11 @@ api.interceptors.response.use(
     const url = original?.url ?? '';
     const hasAccessToken = !!tokenStore.get();
 
+    const isAuthError = status === 401 || status === 403;
+
     if (
       !original ||
-      status !== 401 ||
+      !isAuthError ||
       original._retry ||
       AUTH_ENDPOINTS_NO_REFRESH.some((p) => url?.startsWith(p)) ||
       !hasAccessToken

@@ -23,11 +23,11 @@ export default function NavbarLogoSection() {
           color: 'primary.main',
         }}
       >
-          <img
-              src="/allergy.png"
-              alt="Allergy Tracker Logo"
-              style={{width: '32px', height: '32px'}}
-          />
+        <img
+          src="/allergy.png"
+          alt="Allergy Tracker Logo"
+          style={{width: '32px', height: '32px'}}
+        />
       </Box>
       <Typography variant="h3" fontWeight={700}>
         Allergy Tracker
