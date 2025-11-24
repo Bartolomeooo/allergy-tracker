@@ -9,8 +9,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.List;
 import java.util.UUID;
 
@@ -21,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class EntryMapperTest {
 
   private static final UUID ENTRY_ID = UUID.randomUUID();
-  private static final LocalDate ENTRY_DATE = LocalDate.of(2025, 11, 4);
+  private static final Instant ENTRY_INSTANT = Instant.parse("2025-11-04T10:15:30Z");
   private static final int UPPER_RESPIRATORY = 2;
   private static final int LOWER_RESPIRATORY = 3;
   private static final int SKIN = 1;
@@ -43,7 +41,7 @@ class EntryMapperTest {
     testEntry = new Entry(
             ENTRY_ID,
             testUser,
-            ENTRY_DATE,
+            ENTRY_INSTANT,
             new Symptoms(UPPER_RESPIRATORY),
             new Symptoms(LOWER_RESPIRATORY),
             new Symptoms(SKIN),
@@ -63,7 +61,7 @@ class EntryMapperTest {
     // Then
     assertEquals(ENTRY_ID, actualDto.id());
     assertEquals(testUser.id(), actualDto.userId());
-    assertEquals(ENTRY_DATE.atStartOfDay(ZoneId.systemDefault()).toInstant(), actualDto.occurredOn());
+    assertEquals(ENTRY_INSTANT, actualDto.occurredOn());
     assertEquals(UPPER_RESPIRATORY, actualDto.upperRespiratory());
     assertEquals(LOWER_RESPIRATORY, actualDto.lowerRespiratory());
     assertEquals(SKIN, actualDto.skin());
@@ -76,11 +74,10 @@ class EntryMapperTest {
   @Test
   void shouldMapFromDtoCorrectly() {
     // Given
-    var occurredOn = ENTRY_DATE.atStartOfDay(ZoneId.systemDefault()).toInstant();
     var dto = new EntryDto(
         ENTRY_ID,
             testUser.id(),
-        occurredOn,
+            ENTRY_INSTANT,
         UPPER_RESPIRATORY,
         LOWER_RESPIRATORY,
         SKIN,
@@ -96,7 +93,7 @@ class EntryMapperTest {
 
     // Then
     assertEquals(ENTRY_ID, actualEntry.id());
-    assertEquals(ENTRY_DATE, actualEntry.occurredOn());
+    assertEquals(ENTRY_INSTANT, actualEntry.occurredOn());
     assertEquals(UPPER_RESPIRATORY, actualEntry.upperRespiratory().value());
     assertEquals(LOWER_RESPIRATORY, actualEntry.lowerRespiratory().value());
     assertEquals(SKIN, actualEntry.skin().value());
@@ -136,7 +133,7 @@ class EntryMapperTest {
     var entryWithNullNote = new Entry(
         ENTRY_ID,
             testUser,
-        ENTRY_DATE,
+            ENTRY_INSTANT,
         new Symptoms(UPPER_RESPIRATORY),
         new Symptoms(LOWER_RESPIRATORY),
         new Symptoms(SKIN),
@@ -160,7 +157,7 @@ class EntryMapperTest {
     var entryAllZeros = new Entry(
         ENTRY_ID,
             testUser,
-        ENTRY_DATE,
+            ENTRY_INSTANT,
         new Symptoms(0),
         new Symptoms(0),
         new Symptoms(0),
@@ -184,7 +181,7 @@ class EntryMapperTest {
     var entryMaxValues = new Entry(
         ENTRY_ID,
             testUser,
-        ENTRY_DATE,
+            ENTRY_INSTANT,
         new Symptoms(10),
         new Symptoms(10),
         new Symptoms(10),
@@ -208,7 +205,7 @@ class EntryMapperTest {
     var entryNoExposures = new Entry(
         ENTRY_ID,
             testUser,
-        ENTRY_DATE,
+            ENTRY_INSTANT,
         new Symptoms(1),
         new Symptoms(1),
         new Symptoms(1),
@@ -230,11 +227,10 @@ class EntryMapperTest {
   @Test
   void shouldGenerateUUIDWhenDtoIdIsNull() {
     // Given
-    var occurredOn = ENTRY_DATE.atStartOfDay(ZoneId.systemDefault()).toInstant();
     var dto = new EntryDto(
         null, // no ID
             testUser.id(),
-        occurredOn,
+            ENTRY_INSTANT,
         1, 1, 1, 1, 4,
         List.of(),
         "Note"
@@ -251,11 +247,10 @@ class EntryMapperTest {
   void shouldPreserveUUIDWhenDtoIdIsProvided() {
     // Given
     var customId = UUID.randomUUID();
-    var occurredOn = ENTRY_DATE.atStartOfDay(ZoneId.systemDefault()).toInstant();
     var dto = new EntryDto(
         customId,
             testUser.id(),
-        occurredOn,
+            ENTRY_INSTANT,
         1, 1, 1, 1, 4,
         List.of(),
         "Note"
@@ -272,7 +267,6 @@ class EntryMapperTest {
   void shouldConvertTimestampCorrectly() {
     // Given
     var specificInstant = Instant.parse("2025-11-04T10:15:30.00Z");
-    var expectedDate = specificInstant.atZone(ZoneId.systemDefault()).toLocalDate();
 
     var dto = new EntryDto(
         ENTRY_ID,
@@ -287,7 +281,7 @@ class EntryMapperTest {
     var entry = fromDto(dto, List.of());
 
     // Then
-    assertEquals(expectedDate, entry.occurredOn());
+    assertEquals(specificInstant, entry.occurredOn());
   }
 
   @Test
@@ -300,7 +294,7 @@ class EntryMapperTest {
     var entry = new Entry(
         ENTRY_ID,
             testUser,
-        ENTRY_DATE,
+            ENTRY_INSTANT,
         new Symptoms(1),
         new Symptoms(1),
         new Symptoms(1),
