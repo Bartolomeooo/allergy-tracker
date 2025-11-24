@@ -6,12 +6,12 @@ import {useExposureMap} from '../hooks/useExposureMap';
 import {apiGet, apiPost} from '../api/client';
 
 vi.mock('../api/client', () => ({
-    api: {post: vi.fn()},
-    apiGet: vi.fn(),
-    apiPost: vi.fn(),
-    apiPut: vi.fn(),
-    apiDelete: vi.fn(),
-    tokenStore: {get: vi.fn(), set: vi.fn(), clear: vi.fn()},
+  api: {post: vi.fn()},
+  apiGet: vi.fn(),
+  apiPost: vi.fn(),
+  apiPut: vi.fn(),
+  apiDelete: vi.fn(),
+  tokenStore: {get: vi.fn(), set: vi.fn(), clear: vi.fn()},
 }));
 
 type MockFn = ReturnType<typeof vi.fn>;
@@ -21,56 +21,56 @@ type SaveExposureTypeInput = Parameters<
 >[0];
 
 describe('exposure hooks', () => {
-    beforeEach(() => {
-        vi.clearAllMocks();
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it('useSaveExposureType sends POST and manages submitting flag', async () => {
+    (apiPost as MockFn).mockResolvedValue({
+      id: 'e1',
+      name: 'Milk',
     });
 
-    it('useSaveExposureType sends POST and manages submitting flag', async () => {
-        (apiPost as MockFn).mockResolvedValue({
-            id: 'e1',
-            name: 'Milk',
-        });
+    const {result} = renderHook(() => useSaveExposureType());
 
-        const {result} = renderHook(() => useSaveExposureType());
+    expect(result.current.submitting).toBe(false);
 
-        expect(result.current.submitting).toBe(false);
+    const payload: SaveExposureTypeInput = {name: 'Milk'};
 
-        const payload: SaveExposureTypeInput = {name: 'Milk'};
-
-        await act(async () => {
-            const response = await result.current.save(payload);
-            expect(response).toEqual({id: 'e1', name: 'Milk'});
-        });
-
-        expect(apiPost).toHaveBeenCalledExactlyOnceWith('/api/exposure-types', {
-            name: 'Milk',
-        });
-        expect(result.current.submitting).toBe(false);
+    await act(async () => {
+      const response = await result.current.save(payload);
+      expect(response).toEqual({id: 'e1', name: 'Milk'});
     });
 
-    it('useExposureMap returns a name-to-id map based on API response', async () => {
-        (apiGet as MockFn).mockResolvedValue([
-            {id: '1', name: 'Pollen'},
-            {id: '2', name: 'Milk'},
-        ]);
-
-        const {result} = renderHook(() => useExposureMap());
-
-        await waitFor(() => {
-            expect(result.current).toEqual({
-                Pollen: '1',
-                Milk: '2',
-            });
-        });
+    expect(apiPost).toHaveBeenCalledExactlyOnceWith('/api/exposure-types', {
+      name: 'Milk',
     });
+    expect(result.current.submitting).toBe(false);
+  });
 
-    it('useExposureMap returns empty map when request fails', async () => {
-        (apiGet as MockFn).mockRejectedValue(new Error('fail'));
+  it('useExposureMap returns a name-to-id map based on API response', async () => {
+    (apiGet as MockFn).mockResolvedValue([
+      {id: '1', name: 'Pollen'},
+      {id: '2', name: 'Milk'},
+    ]);
 
-        const {result} = renderHook(() => useExposureMap());
+    const {result} = renderHook(() => useExposureMap());
 
-        await waitFor(() => {
-            expect(result.current).toEqual({});
-        });
+    await waitFor(() => {
+      expect(result.current).toEqual({
+        Pollen: '1',
+        Milk: '2',
+      });
     });
+  });
+
+  it('useExposureMap returns empty map when request fails', async () => {
+    (apiGet as MockFn).mockRejectedValue(new Error('fail'));
+
+    const {result} = renderHook(() => useExposureMap());
+
+    await waitFor(() => {
+      expect(result.current).toEqual({});
+    });
+  });
 });

@@ -4,4 +4,5 @@ export default {
   trailingComma: 'all',
   bracketSpacing: false,
   tabWidth: 2,
+  endOfLine: 'lf',
 };
