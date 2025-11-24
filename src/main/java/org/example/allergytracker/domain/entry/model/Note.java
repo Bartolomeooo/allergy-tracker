@@ -1,6 +1,5 @@
 package org.example.allergytracker.domain.entry.model;
 
-import io.micrometer.common.lang.Nullable;
 import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,11 +9,9 @@ import lombok.experimental.Accessors;
 @Embeddable
 @Getter
 @Accessors(fluent = true)
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class Note {
 
-    @Nullable
     private String value;
-
 }

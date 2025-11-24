@@ -1,13 +1,17 @@
 package org.example.allergytracker.domain.entry.model;
 
-import lombok.*;
-import lombok.experimental.Accessors;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 import org.example.allergytracker.domain.user.model.User;
 
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Entity
@@ -67,4 +71,8 @@ public class Entry {
           inverseJoinColumns = @JoinColumn(name = ENTRY_EXPOSURE_TYPES_EXPOSURE_TYPE_ID)
   )
   private List<ExposureType> exposureTypes;
+
+  public Optional<Note> note() {
+    return Optional.ofNullable(note);
+  }
 }

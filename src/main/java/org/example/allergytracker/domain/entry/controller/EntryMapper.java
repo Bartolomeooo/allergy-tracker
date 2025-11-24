@@ -38,7 +38,7 @@ public class EntryMapper {
             entry.eyes().value(),
             total,
             exposures,
-            entry.note().value()
+            entry.note().map(Note::value).orElse(null)
     );
   }
 
