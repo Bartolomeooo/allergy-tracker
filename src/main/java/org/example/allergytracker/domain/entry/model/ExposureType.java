@@ -15,12 +15,12 @@ import java.util.UUID;
 )
 @Getter
 @Accessors(fluent = true)
-@NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
+@NoArgsConstructor
 @AllArgsConstructor
 public class ExposureType {
 
   static final String TABLE_NAME = "exposure_types";
-  static final String VALUE_COLUMN_NAME = "value";
+  static final String VALUE_COLUMN_NAME = "exposure_value";
   private static final String DESCRIPTION_COLUMN_NAME = "description";
   private static final String ID_COLUMN_NAME = "id";
 
